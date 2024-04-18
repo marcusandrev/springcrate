@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  // Define screens for each bottom navigation bar item
   static final List<Widget> _widgetOptions = <Widget>[
     MainScreen(),
     TransactionsScreen(),
@@ -43,8 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
           height: AppBar().preferredSize.height,
           child: Center(
             child: Image.asset(
-              'lib/assets/logo.png', // Adjust the path based on your assets folder structure
-              width: 150, // Adjust the width as needed
+              'lib/assets/logo.png',
+              width: 150,
             ),
           ),
         ),

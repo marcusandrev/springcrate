@@ -30,3 +30,72 @@ List<Map<String, dynamic>> netSalesData = [
     'year': '2024'
   },
 ];
+
+List<Map<String, dynamic>> transactionsData = [
+  {
+    'plate_no': 'ABC 1234',
+    'service': 'wash',
+    'date': '03/08/2024',
+    'time': '8:00 AM',
+    'status': 'Not Started'
+  },
+  {
+    'plate_no': 'BAS 1234',
+    'service': 'wash',
+    'date': '03/08/2024',
+    'time': '8:00 AM',
+    'status': 'Not Started'
+  },
+  {
+    'plate_no': 'COB 1224',
+    'service': 'wash',
+    'date': '03/08/2024',
+    'time': '8:00 AM',
+    'status': 'Not Started'
+  },
+];
+
+List<Map<String, dynamic>> employeesData = [
+  {
+    'name': 'Juan Dela Cruz',
+    'contact_no': '09230293123',
+  },
+  {
+    'name': 'Juana Dela Cruz',
+    'contact_no': '09230293123',
+  },
+  {
+    'name': 'Joe Dela Cruz',
+    'contact_no': '09430293123',
+  },
+  {
+    'name': 'Jamie Dela Cruz',
+    'contact_no': '09230293123',
+  },
+  {
+    'name': 'Jamie Dela Cruz',
+    'contact_no': '09230293123',
+  },
+  {
+    'name': 'Jamie Dela Cruz',
+    'contact_no': '09230293123',
+  },
+];
+
+List<Map<String, dynamic>> servicesData = [
+  {
+    'service_type': 'Wash',
+    'vehicle_type': 'sedan',
+    'vehicle_size': 'small',
+  },
+  {
+    'service_type': 'Wash',
+    'vehicle_type': 'suv',
+    'vehicle_size': 'medium',
+  },
+  {
+    'service_type': '3 Steps',
+    'vehicle_type': 'van',
+    'vehicle_size': 'large',
+  },
+];
