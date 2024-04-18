@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:springcrate/screens/home/views/main_screen.dart';
+import 'package:springcrate/screens/services/views/services_screen.dart';
+import 'package:springcrate/screens/employees/views/employees_screen.dart';
+import 'package:springcrate/screens/transactions/views/transactions_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -10,11 +14,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Home'),
-    Text('Transactions'),
-    Text('Services'),
-    Text('Employees'),
+  // Define screens for each bottom navigation bar item
+  static final List<Widget> _widgetOptions = <Widget>[
+    MainScreen(),
+    TransactionsScreen(),
+    ServicesScreen(),
+    EmployeesScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -27,21 +32,25 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _widgetOptions[_selectedIndex],
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-        ),
+        backgroundColor: Colors.white,
         centerTitle: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(40),
           ),
         ),
+        title: SizedBox(
+          height: AppBar().preferredSize.height,
+          child: Center(
+            child: Image.asset(
+              'lib/assets/logo.png', // Adjust the path based on your assets folder structure
+              width: 150, // Adjust the width as needed
+            ),
+          ),
+        ),
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: SingleChildScrollView(
+        child: _widgetOptions[_selectedIndex],
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.vertical(
@@ -66,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton.small(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {},
         shape: const CircleBorder(),
         child: Icon(Icons.add),
