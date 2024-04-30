@@ -1,5 +1,5 @@
 class Transaction {
-  final String? transactionID;
+  final String transactionID;
   final String plateNo;
   final String vehicleType;
   final String vehicleSize;
@@ -8,7 +8,7 @@ class Transaction {
   final String endDate;
   final double cost;
   final String status;
-  final String employeeID;
+  final String? employeeID;
 
   const Transaction(
       this.transactionID,

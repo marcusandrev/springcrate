@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class TransactionForm extends StatefulWidget {
   const TransactionForm({super.key, required this.context});
@@ -99,12 +100,14 @@ class TransactionFormState extends State<TransactionForm> {
                       _serviceType = value!;
                     }),
                 const SizedBox(height: 20.0),
-                Container(
-                  margin: const EdgeInsets.all(8.0),
+                SizedBox(
                   width: double.infinity,
-                  height: 40,
+                  height: 45,
                   child: ElevatedButton(
                       style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
                           backgroundColor:
                               MaterialStateProperty.all(Colors.blue),
                           foregroundColor:
