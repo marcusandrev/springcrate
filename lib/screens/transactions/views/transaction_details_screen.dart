@@ -105,7 +105,8 @@ class TransactionDetailsScreen extends StatelessWidget {
           const SizedBox(height: 4),
           const Text(
             'Assign the transaction to an employee to start',
-            style: TextStyle(fontSize: 12),
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 11),
           )
         ],
       );
@@ -180,7 +181,8 @@ class TransactionDetailsScreen extends StatelessWidget {
         const SizedBox(height: 4),
         const Text(
           'This transaction has been assigned to [ADD EMPLOYEE ON INTEG]',
-          style: TextStyle(fontSize: 12),
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 11),
         )
       ],
     );
