@@ -3,6 +3,7 @@ import 'package:springcrate/screens/home/views/main_screen.dart';
 import 'package:springcrate/screens/services/views/services_screen.dart';
 import 'package:springcrate/screens/employees/views/employees_screen.dart';
 import 'package:springcrate/screens/transactions/views/transactions_screen.dart';
+import 'package:springcrate/screens/transactions/widgets/transaction_form.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,10 +16,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
-    MainScreen(),
-    TransactionsScreen(),
-    ServicesScreen(),
-    EmployeesScreen(),
+    const MainScreen(),
+    const TransactionsScreen(),
+    const ServicesScreen(),
+    const EmployeesScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -27,8 +28,25 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  dynamic _getBottomSheetForm(BuildContext context) {
+    if (_selectedIndex == 0) {
+      return null;
+    }
+
+    final List<dynamic> bottomSheetOptions = [
+      null,
+      TransactionForm(context: context),
+      null,
+      null
+    ];
+
+    return bottomSheetOptions[_selectedIndex];
+  }
+
   @override
   Widget build(BuildContext context) {
+    dynamic bottomSheetForm = _getBottomSheetForm(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -75,7 +93,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          if (bottomSheetForm != null) {
+            showModalBottomSheet<dynamic>(
+                isScrollControlled: true,
+                context: context,
+                builder: (BuildContext context) {
+                  return Wrap(
+                    children: [bottomSheetForm],
+                  );
+                });
+          }
+        },
         shape: const CircleBorder(),
         child: Icon(Icons.add),
       ),
