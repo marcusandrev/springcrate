@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:springcrate/screens/transactions/class_def/transaction.dart';
 
 List<Map<String, dynamic>> netSalesData = [
   {
@@ -31,28 +32,34 @@ List<Map<String, dynamic>> netSalesData = [
   },
 ];
 
-List<Map<String, dynamic>> transactionsData = [
-  {
-    'plate_no': 'ABC 1234',
-    'service': 'wash',
-    'date': '03/08/2024',
-    'time': '8:00 AM',
-    'status': 'Not Started'
-  },
-  {
-    'plate_no': 'BAS 1234',
-    'service': 'wash',
-    'date': '03/08/2024',
-    'time': '8:00 AM',
-    'status': 'Not Started'
-  },
-  {
-    'plate_no': 'COB 1224',
-    'service': 'wash',
-    'date': '03/08/2024',
-    'time': '8:00 AM',
-    'status': 'Not Started'
-  },
+List<Transaction> transactionsData = [
+  // {
+  //   'plate_no': 'ABC 1234',
+  //   'service': 'wash',
+  //   'date': '03/08/2024',
+  //   'time': '8:00 AM',
+  //   'status': 'Not Started'
+  // },
+  // {
+  //   'plate_no': 'BAS 1234',
+  //   'service': 'wash',
+  //   'date': '03/08/2024',
+  //   'time': '8:00 AM',
+  //   'status': 'Not Started'
+  // },
+  // {
+  //   'plate_no': 'COB 1224',
+  //   'service': 'wash',
+  //   'date': '03/08/2024',
+  //   'time': '8:00 AM',
+  //   'status': 'Not Started'
+  // },
+  const Transaction('1234', 'ABC 1234', 'sedan', 'medium', 'wash', '7:00',
+      '10:00', 100.00, 'Not Started', 'employee123'),
+  const Transaction('1234', 'ABC 1234', 'sedan', 'medium', 'wash', '7:00',
+      '10:00', 100.00, 'Not Started', 'employee123'),
+  const Transaction('1234', 'ABC 1234', 'sedan', 'medium', 'wash', '7:00',
+      '10:00', 100.00, 'Not Started', 'employee123')
 ];
 
 List<Map<String, dynamic>> employeesData = [
