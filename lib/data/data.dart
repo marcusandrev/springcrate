@@ -95,11 +95,11 @@ List<Employee> employeesData = [
   //   'contact_no': '09230293123',
   // },
   const Employee('0b5aae66-178c-499c-83db-16e097fa7fe6', 'Juan Dela Cruz',
-      '60/40', '09230293123', 'Secret road'),
+      '60/40', '09230293123', 'Secret road', 0),
   const Employee('0474c82c-1f7a-46a6-96f9-ce8e8d80f120', 'Juana Dela Cruz',
-      '60/40', '09230293123', 'Secret road'),
+      '60/40', '09230293123', 'Secret road', 1),
   const Employee('ad005553-a2b8-46f1-9e2e-def8ab0a880e', 'Joe Dela Cruz',
-      '70/30', '09230293123', 'Secret road')
+      '70/30', '09230293123', 'Secret road', 0)
 ];
 
 List<Map<String, dynamic>> servicesData = [
