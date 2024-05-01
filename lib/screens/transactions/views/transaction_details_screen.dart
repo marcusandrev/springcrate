@@ -135,10 +135,14 @@ class TransactionDetailsScreen extends StatelessWidget {
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                              Text(
-                                "By clicking continue, you verify that the transaction was completed by the employee.",
-                                style: TextStyle(color: Colors.grey.shade600),
-                              ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.only(top: 12, bottom: 32),
+                                child: Text(
+                                  "By clicking continue, you verify that the transaction was completed by the employee.",
+                                  style: TextStyle(color: Colors.grey.shade600),
+                                ),
+                              )
                             ]),
                         SizedBox(
                           width: double.infinity,

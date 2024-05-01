@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:springcrate/data/data.dart';
+import 'package:springcrate/screens/employees/class_def/employee.dart';
 
 class AssignForm extends StatefulWidget {
   const AssignForm({super.key, required this.context});
@@ -49,10 +50,10 @@ class AssignFormState extends State<AssignForm> {
                     decoration: const InputDecoration(
                         border: UnderlineInputBorder(),
                         labelText: 'Select an employee'),
-                    items: _employees.map((Map<String, dynamic> employee) {
+                    items: _employees.map((Employee employee) {
                       return DropdownMenuItem(
-                          value: employee['id'].toString(),
-                          child: Row(children: [Text(employee['name'])]));
+                          value: employee.employeeID,
+                          child: Row(children: [Text(employee.employeeName)]));
                     }).toList(),
                     onChanged: (value) {
                       _employeeID = value!;
