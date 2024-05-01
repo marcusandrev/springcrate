@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:springcrate/screens/employees/widgets/employee_form.dart';
 import 'package:springcrate/screens/home/views/main_screen.dart';
 import 'package:springcrate/screens/services/views/services_screen.dart';
 import 'package:springcrate/screens/employees/views/employees_screen.dart';
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       null,
       TransactionForm(context: context),
       null,
-      null
+      EmployeeForm(context: context)
     ];
 
     return bottomSheetOptions[_selectedIndex];
