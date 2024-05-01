@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:springcrate/screens/employees/class_def/employee.dart';
 import 'package:springcrate/screens/transactions/class_def/transaction.dart';
 
 List<Map<String, dynamic>> netSalesData = [
@@ -62,37 +63,43 @@ List<Transaction> transactionsData = [
       'medium', 'wash', '7:00', '10:00', 100.00, 'Not Started', null)
 ];
 
-List<Map<String, dynamic>> employeesData = [
-  {
-    'id': '2cb337b1-146b-4cf6-8802-db18006ad6c0',
-    'name': 'Juan Dela Cruz',
-    'contact_no': '09230293123',
-  },
-  {
-    'id': 'ce5c9b96-105d-46c4-a656-baaddee2d168',
-    'name': 'Juana Dela Cruz',
-    'contact_no': '09230293123',
-  },
-  {
-    'id': 'ba5ef578-fc72-4d8f-b9e6-09d48bc86948',
-    'name': 'Joe Dela Cruz',
-    'contact_no': '09430293123',
-  },
-  {
-    'id': '5eaa23b8-374c-4963-a1a3-e60f44a74f0d',
-    'name': 'Jamie Dela Cruz',
-    'contact_no': '09230293123',
-  },
-  {
-    'id': '0c7b4cbf-f1dd-4814-b8ff-8b1715134689',
-    'name': 'Jamie Dela Cruz',
-    'contact_no': '09230293123',
-  },
-  {
-    'id': '4cd59489-6595-4296-9aea-5414726e51ae',
-    'name': 'Jamie Dela Cruz',
-    'contact_no': '09230293123',
-  },
+List<Employee> employeesData = [
+  // {
+  //   'id': '2cb337b1-146b-4cf6-8802-db18006ad6c0',
+  //   'name': 'Juan Dela Cruz',
+  //   'contact_no': '09230293123',
+  // },
+  // {
+  //   'id': 'ce5c9b96-105d-46c4-a656-baaddee2d168',
+  //   'name': 'Juana Dela Cruz',
+  //   'contact_no': '09230293123',
+  // },
+  // {
+  //   'id': 'ba5ef578-fc72-4d8f-b9e6-09d48bc86948',
+  //   'name': 'Joe Dela Cruz',
+  //   'contact_no': '09430293123',
+  // },
+  // {
+  //   'id': '5eaa23b8-374c-4963-a1a3-e60f44a74f0d',
+  //   'name': 'Jamie Dela Cruz',
+  //   'contact_no': '09230293123',
+  // },
+  // {
+  //   'id': '0c7b4cbf-f1dd-4814-b8ff-8b1715134689',
+  //   'name': 'Jamie Dela Cruz',
+  //   'contact_no': '09230293123',
+  // },
+  // {
+  //   'id': '4cd59489-6595-4296-9aea-5414726e51ae',
+  //   'name': 'Jamie Dela Cruz',
+  //   'contact_no': '09230293123',
+  // },
+  const Employee('0b5aae66-178c-499c-83db-16e097fa7fe6', 'Juan Dela Cruz',
+      '60/40', '09230293123', 'Secret road'),
+  const Employee('0474c82c-1f7a-46a6-96f9-ce8e8d80f120', 'Juana Dela Cruz',
+      '60/40', '09230293123', 'Secret road'),
+  const Employee('ad005553-a2b8-46f1-9e2e-def8ab0a880e', 'Joe Dela Cruz',
+      '70/30', '09230293123', 'Secret road')
 ];
 
 List<Map<String, dynamic>> servicesData = [
