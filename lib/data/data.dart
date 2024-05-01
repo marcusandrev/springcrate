@@ -152,10 +152,10 @@ List<Service> servicesData = [
   //   'vehicle_type': 'van',
   //   'vehicle_size': 'large',
   // },
-  const Service('7e175cea-f82e-4804-8ab0-1db6a946c631', 'Wash - SEDAN',
-      'medium', 'sedan', null, 100),
-  const Service('0c5597dd-1d75-4468-9d95-ab1817a30460',
-      'Wash & Hand Wax - MOTORCYCLE', 'medium', 'motorcycle', null, 100),
-  const Service('a3c74837-bdd2-4e00-b6ca-e827a57612c1',
-      'Hand Wax-Interior - SUV', 'small', 'suv', null, 100)
+  const Service('7e175cea-f82e-4804-8ab0-1db6a946c631', 'Wash', 'medium',
+      'sedan', null, 100),
+  const Service('0c5597dd-1d75-4468-9d95-ab1817a30460', 'Wash & Hand Wax',
+      'medium', 'motorcycle', null, 100),
+  const Service('a3c74837-bdd2-4e00-b6ca-e827a57612c1', 'Hand Wax-Interior',
+      'small', 'suv', null, 100)
 ];
