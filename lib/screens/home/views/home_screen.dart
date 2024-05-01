@@ -3,6 +3,7 @@ import 'package:springcrate/screens/employees/widgets/employee_form.dart';
 import 'package:springcrate/screens/home/views/main_screen.dart';
 import 'package:springcrate/screens/services/views/services_screen.dart';
 import 'package:springcrate/screens/employees/views/employees_screen.dart';
+import 'package:springcrate/screens/services/widgets/service_form.dart';
 import 'package:springcrate/screens/transactions/views/transactions_screen.dart';
 import 'package:springcrate/screens/transactions/widgets/transaction_form.dart';
 
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<dynamic> bottomSheetOptions = [
       null,
       TransactionForm(context: context),
-      null,
+      ServiceForm(context: context),
       EmployeeForm(context: context)
     ];
 

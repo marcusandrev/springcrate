@@ -19,6 +19,7 @@ class ServicesScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 for (var data in servicesData)
@@ -57,7 +58,6 @@ class ServicesScreen extends StatelessWidget {
                   color: primaryColor),
             ),
             SizedBox(height: 4.0),
-
             Row(
               children: [
                 Expanded(
@@ -93,7 +93,6 @@ class ServicesScreen extends StatelessWidget {
                 const SizedBox(width: 120),
               ],
             ),
-
             Row(
               children: [
                 Spacer(),
