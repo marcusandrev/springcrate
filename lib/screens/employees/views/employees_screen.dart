@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:springcrate/screens/employees/class_def/employee.dart';
 import 'package:springcrate/screens/employees/views/employee_details_screen.dart';
+import 'package:springcrate/util/employee_utils.dart';
 import 'package:springcrate/widgets/searchbar.dart';
 import 'package:springcrate/data/data.dart';
 
@@ -77,7 +78,7 @@ class EmployeesScreen extends StatelessWidget {
                     'Rate',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(employee.rate)
+                  Text(EmployeeUtils.stringifyRate(employee.rate))
                 ])
               ],
             ),

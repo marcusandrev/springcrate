@@ -15,7 +15,7 @@ class EmployeeFormState extends State<EmployeeForm> {
   final _rates = ['70/30', '60/40'];
 
   String _employeeName = '';
-  String _rate = '';
+  double _rate = 0;
   String _contactNo = '';
   String _address = '';
 
@@ -60,7 +60,13 @@ class EmployeeFormState extends State<EmployeeForm> {
                           value: rate, child: Row(children: [Text(rate)]));
                     }).toList(),
                     onChanged: (value) {
-                      _rate = value!;
+                      if (value == '70/30') {
+                        _rate = 0.3;
+                      }
+
+                      if (value == '60/40') {
+                        _rate = 0.4;
+                      }
                     }),
                 const SizedBox(height: 16.0),
                 TextFormField(

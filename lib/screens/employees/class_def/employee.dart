@@ -1,7 +1,7 @@
 class Employee {
   final String employeeID;
   final String employeeName;
-  final String rate;
+  final double rate;
   final String contactNo;
   final String address;
   final int status;

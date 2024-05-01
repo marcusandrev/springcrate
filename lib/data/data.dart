@@ -55,12 +55,39 @@ List<Transaction> transactionsData = [
   //   'time': '8:00 AM',
   //   'status': 'Not Started'
   // },
-  const Transaction('d20a1c3c-ba9c-46d7-b44f-e0cb8486f9f3', 'ABC 1234', 'sedan',
-      'medium', 'wash', '7:00', '10:00', 100.00, 'Not Started', 'employee123'),
-  const Transaction('3fc48480-8b2f-4af2-822b-4c7503dd4031', 'DEF 5678', 'sedan',
-      'medium', 'wash', '7:00', '10:00', 100.00, 'Not Started', 'employee123'),
-  const Transaction('3964d5b5-1d88-48a1-80a8-404fb987cc67', 'GHI 9012', 'sedan',
-      'medium', 'wash', '7:00', '10:00', 100.00, 'Not Started', null)
+  const Transaction(
+      'd20a1c3c-ba9c-46d7-b44f-e0cb8486f9f3',
+      'ABC 1234',
+      'sedan',
+      'medium',
+      'wash',
+      '03/08/2024 12:01 am',
+      '05/01/2024 12:01 am',
+      100.00,
+      'Not Started',
+      'employee123'),
+  const Transaction(
+      '3fc48480-8b2f-4af2-822b-4c7503dd4031',
+      'DEF 5678',
+      'sedan',
+      'medium',
+      'wash',
+      '03/08/2024 12:01 am',
+      '05/01/2024 12:01 am',
+      100.00,
+      'Not Started',
+      'employee123'),
+  const Transaction(
+      '3964d5b5-1d88-48a1-80a8-404fb987cc67',
+      'GHI 9012',
+      'sedan',
+      'medium',
+      'wash',
+      '03/08/2024 12:01 am',
+      '05/01/2024 12:01 am',
+      100.00,
+      'Not Started',
+      null)
 ];
 
 List<Employee> employeesData = [
@@ -94,12 +121,17 @@ List<Employee> employeesData = [
   //   'name': 'Jamie Dela Cruz',
   //   'contact_no': '09230293123',
   // },
-  const Employee('0b5aae66-178c-499c-83db-16e097fa7fe6', 'Juan Dela Cruz',
-      '60/40', '09230293123', 'Secret road', 0),
-  const Employee('0474c82c-1f7a-46a6-96f9-ce8e8d80f120', 'Juana Dela Cruz',
-      '60/40', '09230293123', 'Secret road', 1),
-  const Employee('ad005553-a2b8-46f1-9e2e-def8ab0a880e', 'Joe Dela Cruz',
-      '70/30', '09230293123', 'Secret road', 0)
+  const Employee('0b5aae66-178c-499c-83db-16e097fa7fe6', 'Juan Dela Cruz', 0.4,
+      '09230293123', '727 Leland Valleys, East Jean, CT 88140', 0),
+  const Employee(
+      '0474c82c-1f7a-46a6-96f9-ce8e8d80f120',
+      'Juana Dela Cruz',
+      0.4,
+      '09230293123',
+      'Suite 452 514 Simonis Extensions, Lupemouth, IN 58326',
+      1),
+  const Employee('ad005553-a2b8-46f1-9e2e-def8ab0a880e', 'Joe Dela Cruz', 0.3,
+      '09230293123', '94319 Zieme Mills, Mckinleyton, WY 58061', 0)
 ];
 
 List<Map<String, dynamic>> servicesData = [
