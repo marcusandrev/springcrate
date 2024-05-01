@@ -15,10 +15,14 @@ class ServiceForm extends StatefulWidget {
 class ServiceFormState extends State<ServiceForm> {
   final _formKey = GlobalKey<FormState>();
   final List<dynamic> _promoItems = ['wash', 'vacuum', 'tire black', 'blower'];
+  final _vehicleTypes = ['sedan', 'suv', 'van', 'pickup', 'motorcycle'];
+  final _vehicleSizes = ['small', 'medium', 'large'];
 
   dynamic _selectedPromos = [];
 
   String _serviceName = '';
+  String _vehicleType = '';
+  String _vehicleSize = '';
   double _cost = 0;
 
   void _clear() {}
@@ -28,7 +32,8 @@ class ServiceFormState extends State<ServiceForm> {
     final promos =
         _selectedPromos.map((promo) => promo.toUpperCase()).join(', ');
 
-    print("Service Name: $_serviceName\nPromos: $promos\nService Cost: $_cost");
+    print(
+        "Service Name: $_serviceName\nPromos: $promos\nService Cost: $_cost\nVehile Type: $_vehicleType\nVehicle Size: $_vehicleSize");
     Navigator.pop(context);
   }
 
@@ -76,6 +81,33 @@ class ServiceFormState extends State<ServiceForm> {
                     onTap: (List<dynamic>? values) {
                       _selectedPromos = values;
                     }),
+                const SizedBox(height: 16.0),
+                DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: 'Select a vehicle type'),
+                    items: _vehicleTypes.map((String vehicleType) {
+                      return DropdownMenuItem(
+                          value: vehicleType,
+                          child: Row(children: [Text(vehicleType)]));
+                    }).toList(),
+                    onChanged: (value) {
+                      _vehicleType = value!;
+                    }),
+                const SizedBox(height: 16.0),
+                DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: 'Select a vehicle size'),
+                    items: _vehicleSizes.map((String vehicleSize) {
+                      return DropdownMenuItem(
+                          value: vehicleSize,
+                          child: Row(children: [Text(vehicleSize)]));
+                    }).toList(),
+                    onChanged: (value) {
+                      _vehicleSize = value!;
+                    }),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   decoration: const InputDecoration(
                       border: UnderlineInputBorder(), labelText: 'Enter Cost'),
