@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:springcrate/screens/transactions/class_def/transaction.dart';
+import 'package:springcrate/screens/transactions/views/transaction_details_screen.dart';
 import 'package:springcrate/widgets/searchbar.dart';
 import 'package:springcrate/data/data.dart';
 
@@ -18,16 +20,16 @@ class TransactionsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 for (var data in transactionsData)
-                  _buildTransactionsCard(
-                      context,
-                      data['plate_no'],
-                      data['service'],
-                      data['date'],
-                      data['time'],
-                      data['status']),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, _createRoute(context, data));
+                    },
+                    child: _buildTransactionsCard(context, data),
+                  ),
               ],
             ),
           ),
@@ -38,13 +40,14 @@ class TransactionsScreen extends StatelessWidget {
 
   Widget _buildTransactionsCard(
     BuildContext context,
-    String plate_no,
-    String service,
-    String date,
-    String time,
-    String status,
+    Transaction transactionItem,
   ) {
     Color primaryColor = Theme.of(context).primaryColor;
+    final plateNo = transactionItem.plateNo;
+    final service = transactionItem.service;
+    final start = transactionItem.startDate;
+    final status = transactionItem.status;
+
     return Card(
       elevation: 4,
       color: Colors.white,
@@ -55,7 +58,7 @@ class TransactionsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Plate no: $plate_no",
+              "Plate no: $plateNo",
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -70,7 +73,7 @@ class TransactionsScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("$date, $time"),
+                Text(start),
                 Row(
                   children: [
                     Icon(
@@ -80,7 +83,7 @@ class TransactionsScreen extends StatelessWidget {
                     TextButton(
                       onPressed: null, // Add functionality here
                       child: Text(
-                        '$status',
+                        status,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -96,5 +99,24 @@ class TransactionsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Route _createRoute(BuildContext context, Transaction transaction) {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            TransactionDetailsScreen(transaction: transaction),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
   }
 }
