@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:springcrate/data/data.dart';
+import 'package:springcrate/screens/services/class_def/service.dart';
 
 class TransactionForm extends StatefulWidget {
   const TransactionForm({super.key, required this.context});
@@ -13,18 +15,14 @@ class TransactionForm extends StatefulWidget {
 
 class TransactionFormState extends State<TransactionForm> {
   final _formKey = GlobalKey<FormState>();
-  final _vehicleTypes = ['sedan', 'suv', 'van', 'pickup', 'motorcycle'];
-  final _vehicleSizes = ['small', 'medium', 'large'];
   // TODO: Get services from server backend
-  final _services = [
-    'wash',
-    'wash & hand wax',
-    'hand wax - interior',
-  ];
+  // final _services = [
+  //   'wash',
+  //   'wash & hand wax',
+  //   'hand wax - interior',
+  // ];
 
   String _plateNo = '';
-  String _vehicleType = '';
-  String _vehicleSize = '';
   String _serviceType = '';
 
   void _clear() {
@@ -33,8 +31,7 @@ class TransactionFormState extends State<TransactionForm> {
 
   void _onSubmit() {
     // TODO: Add logic for adding document to firebase
-    print(
-        'Plate No. $_plateNo\nVehicle Type $_vehicleType\nVehicle Size $_vehicleSize\nService Type $_serviceType');
+    print('Plate No. $_plateNo\nService: $_serviceType');
     _clear();
     Navigator.pop(context);
   }
@@ -64,37 +61,11 @@ class TransactionFormState extends State<TransactionForm> {
                 DropdownButtonFormField(
                     decoration: const InputDecoration(
                         border: UnderlineInputBorder(),
-                        labelText: 'Select a vehicle type'),
-                    items: _vehicleTypes.map((String vehicleType) {
-                      return DropdownMenuItem(
-                          value: vehicleType,
-                          child: Row(children: [Text(vehicleType)]));
-                    }).toList(),
-                    onChanged: (value) {
-                      _vehicleType = value!;
-                    }),
-                const SizedBox(height: 16.0),
-                DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        labelText: 'Select a vehicle size'),
-                    items: _vehicleSizes.map((String vehicleSize) {
-                      return DropdownMenuItem(
-                          value: vehicleSize,
-                          child: Row(children: [Text(vehicleSize)]));
-                    }).toList(),
-                    onChanged: (value) {
-                      _vehicleSize = value!;
-                    }),
-                const SizedBox(height: 16.0),
-                DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
                         labelText: 'Select a service'),
-                    items: _services.map((String serviceType) {
+                    items: servicesData.map((Service service) {
                       return DropdownMenuItem(
-                          value: serviceType,
-                          child: Row(children: [Text(serviceType)]));
+                          value: service.serviceName,
+                          child: Row(children: [Text(service.serviceName)]));
                     }).toList(),
                     onChanged: (value) {
                       _serviceType = value!;

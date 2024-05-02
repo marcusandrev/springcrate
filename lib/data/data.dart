@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:springcrate/screens/employees/class_def/employee.dart';
+import 'package:springcrate/screens/services/class_def/service.dart';
 import 'package:springcrate/screens/transactions/class_def/transaction.dart';
 
 List<Map<String, dynamic>> netSalesData = [
@@ -134,20 +135,27 @@ List<Employee> employeesData = [
       '09230293123', '94319 Zieme Mills, Mckinleyton, WY 58061', 0)
 ];
 
-List<Map<String, dynamic>> servicesData = [
-  {
-    'service_type': 'Wash',
-    'vehicle_type': 'sedan',
-    'vehicle_size': 'small',
-  },
-  {
-    'service_type': 'Wash',
-    'vehicle_type': 'suv',
-    'vehicle_size': 'medium',
-  },
-  {
-    'service_type': '3 Steps',
-    'vehicle_type': 'van',
-    'vehicle_size': 'large',
-  },
+List<Service> servicesData = [
+  // {
+
+  //   'service_type': 'Wash',
+  //   'vehicle_type': 'sedan',
+  //   'vehicle_size': 'small',
+  // },
+  // {
+  //   'service_type': 'Wash',
+  //   'vehicle_type': 'suv',
+  //   'vehicle_size': 'medium',
+  // },
+  // {
+  //   'service_type': '3 Steps',
+  //   'vehicle_type': 'van',
+  //   'vehicle_size': 'large',
+  // },
+  const Service('7e175cea-f82e-4804-8ab0-1db6a946c631', 'Wash', 'medium',
+      'sedan', null, 100),
+  const Service('0c5597dd-1d75-4468-9d95-ab1817a30460', 'Wash & Hand Wax',
+      'medium', 'motorcycle', null, 100),
+  const Service('a3c74837-bdd2-4e00-b6ca-e827a57612c1', 'Hand Wax-Interior',
+      'small', 'suv', null, 100)
 ];
