@@ -193,7 +193,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 : Theme.of(context).colorScheme.onBackground),
                       ),
                       Text(
-                        "⚈  8 minimum character",
+                        "⚈  8 minimum characters",
                         style: TextStyle(
                             color: contains8Length
                                 ? Colors.green
