@@ -132,7 +132,7 @@ class MainScreen extends StatelessWidget {
             Text(
               vehicleType,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.bold,
               ),
