@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:springcrate/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:springcrate/screens/employees/widgets/employee_form.dart';
 import 'package:springcrate/screens/home/views/main_screen.dart';
 import 'package:springcrate/screens/services/views/services_screen.dart';
@@ -53,19 +56,30 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(40),
-          ),
-        ),
-        title: SizedBox(
-          height: AppBar().preferredSize.height,
-          child: Center(
-            child: Image.asset(
-              'lib/assets/logo.png',
-              width: 150,
+        // shape: const RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(
+        //     bottom: Radius.circular(40),
+        //   ),
+        // ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              height: AppBar().preferredSize.height,
+              child: Center(
+                child: Image.asset(
+                  'lib/assets/logo.png',
+                  width: 150,
+                ),
+              ),
             ),
-          ),
+            IconButton(
+              onPressed: () {
+                context.read<SignInBloc>().add(SignOutRequired());
+              },
+              icon: const Icon(CupertinoIcons.arrow_right_to_line),
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
