@@ -4,7 +4,7 @@ class Service {
   final String vehicleSize;
   final String vehicleType;
   final String? promo;
-  final double cost;
+  final int cost;
 
   const Service(this.serviceID, this.serviceName, this.vehicleSize,
       this.vehicleType, this.promo, this.cost);

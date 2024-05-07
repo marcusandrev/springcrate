@@ -23,6 +23,9 @@ dependencies:
   user_repository:
     path: packages/user_repository
 
+  services_repository:
+    path: packages/services_repository
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
