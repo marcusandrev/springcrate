@@ -37,24 +37,14 @@ class _ServiceScreen extends StatelessWidget {
           const SizedBox(height: 20),
           SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                for (var data in servicesData)
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, _createRoute(context, data));
-                    },
-                    child: _buildTransactionsCard(context, data),
-                  )
-              ],
-            ),
+            child: _buildTransactionsCard(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTransactionsCard(BuildContext context, Service service) {
+  Widget _buildTransactionsCard(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
 
@@ -65,97 +55,112 @@ class _ServiceScreen extends StatelessWidget {
         } else if (state is GetServicesSuccess) {
           print('Number of cards created: ${state.services.length}');
 
-          return SingleChildScrollView(
-            child: Column(
-              children: state.services.map((service) {
-                return Card(
-                  elevation: 4,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${service.serviceName} - ${service.vehicleType.toUpperCase()}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor,
-                          ),
+          return Column(
+            children: state.services.map((service) {
+              return Card(
+                elevation: 4,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${service.serviceName} - ${service.vehicleType.toUpperCase()}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
                         ),
-                        const SizedBox(height: 4.0),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(right: 32),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Cost',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${service.cost}',
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Column(
+                      ),
+                      const SizedBox(height: 4.0),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(right: 32),
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Size',
+                                  'Cost',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  service.vehicleSize,
+                                  '${service.cost}',
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Spacer(),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.chevron_right,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Size',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                service.vehicleSize,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Spacer(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.chevron_right,
+                                color: secondaryColor,
+                              ),
+
+                              Text(
+                                'More info',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
                                   color: secondaryColor,
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Add functionality here
-                                  },
-                                  child: Text(
-                                    'More info',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: secondaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                              ),
+
+                              // TextButton(
+                              //   onPressed: () {
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //         builder: (context) => ServiceDetailsScreen(
+                              //           service: service,
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              //   child: Text(
+                              //     'More info',
+                              //     style: TextStyle(
+                              //       fontSize: 12,
+                              //       fontWeight: FontWeight.bold,
+                              //       color: secondaryColor,
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              );
+            }).toList(),
           );
         } else {
           return const Center(
@@ -165,24 +170,25 @@ class _ServiceScreen extends StatelessWidget {
       },
     );
   }
-
-  Route _createRoute(BuildContext context, Service service) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          ServiceDetailsScreen(service: service),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
 }
+
+//   Route _createRoute(BuildContext context, Service service) {
+//     return PageRouteBuilder(
+//       pageBuilder: (context, animation, secondaryAnimation) =>
+//           ServiceDetailsScreen(service: service),
+//       transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//         const begin = Offset(1.0, 0.0);
+//         const end = Offset.zero;
+//         const curve = Curves.ease;
+
+//         var tween =
+//             Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+//         return SlideTransition(
+//           position: animation.drive(tween),
+//           child: child,
+//         );
+//       },
+//     );
+//   }
+// }
