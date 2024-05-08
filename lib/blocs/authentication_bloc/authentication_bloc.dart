@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -18,9 +19,11 @@ class AuthenticationBloc
     _userSubscription = userRepository.user.listen((user) {
       add(AuthenticationUserChanged(user));
     });
-    on<AuthenticationUserChanged>((event, emit) {
+    on<AuthenticationUserChanged>((event, emit) async {
       if (event.user != null) {
-        emit(AuthenticationState.authenticated(event.user!));
+        final isAdmin = await userRepository.isAdmin(event.user!);
+         log('User Authenticated: ${event.user!.email}, isAdmin: $isAdmin');
+        emit(AuthenticationState.authenticated(event.user!, isAdmin));
       } else {
         emit(const AuthenticationState.unauthenticated());
       }

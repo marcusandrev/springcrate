@@ -12,3 +12,9 @@ class AuthenticationUserChanged extends AuthenticationEvent {
 
 	const AuthenticationUserChanged(this.user);
 }
+
+class CheckAdmin extends AuthenticationEvent {
+  final User user;
+
+  const CheckAdmin(this.user);
+}
