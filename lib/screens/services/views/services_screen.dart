@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:services_repository/services_repository.dart';
 import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
-import 'package:springcrate/screens/services/class_def/service.dart';
 import 'package:springcrate/screens/services/views/service_details_screen.dart';
 import 'package:springcrate/widgets/searchbar.dart';
-import 'package:springcrate/data/data.dart';
 
 class ServicesScreen extends StatelessWidget {
   const ServicesScreen({Key? key}) : super(key: key);
@@ -57,106 +55,97 @@ class _ServiceScreen extends StatelessWidget {
 
           return Column(
             children: state.services.map((service) {
-              return Card(
-                elevation: 4,
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${service.serviceName} - ${service.vehicleType.toUpperCase()}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: primaryColor,
-                        ),
+              return InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => ServiceDetailsScreen(
+                        service: service,
                       ),
-                      const SizedBox(height: 4.0),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(right: 32),
-                            child: Column(
+                    ),
+                  );
+                },
+                child: Card(
+                  elevation: 4,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${service.serviceName} - ${service.vehicleType.toUpperCase()}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 4.0),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(right: 32),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Cost',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${service.cost}',
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Cost',
+                                  'Size',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  '${service.cost}',
+                                  service.vehicleSize,
                                 ),
                               ],
                             ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Size',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                service.vehicleSize,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Spacer(),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.chevron_right,
-                                color: secondaryColor,
-                              ),
-
-                              Text(
-                                'More info',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Spacer(),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.chevron_right,
                                   color: secondaryColor,
                                 ),
-                              ),
-
-                              // TextButton(
-                              //   onPressed: () {
-                              //     Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //         builder: (context) => ServiceDetailsScreen(
-                              //           service: service,
-                              //         ),
-                              //       ),
-                              //     );
-                              //   },
-                              //   child: Text(
-                              //     'More info',
-                              //     style: TextStyle(
-                              //       fontSize: 12,
-                              //       fontWeight: FontWeight.bold,
-                              //       color: secondaryColor,
-                              //     ),
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
+                                Text(
+                                  'More info',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: secondaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -171,6 +160,7 @@ class _ServiceScreen extends StatelessWidget {
     );
   }
 }
+
 
 //   Route _createRoute(BuildContext context, Service service) {
 //     return PageRouteBuilder(
