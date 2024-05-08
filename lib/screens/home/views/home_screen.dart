@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:services_repository/services_repository.dart';
+import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
 import 'package:springcrate/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:springcrate/screens/employees/widgets/employee_form.dart';
 import 'package:springcrate/screens/home/views/main_screen.dart';
@@ -23,7 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const MainScreen(),
     const TransactionsScreen(),
+
+      // BlocProvider(
+      //   create: (context) => GetServicesBloc( FirebaseServiceRepo())..add(GetServices()),
+      //   child:  const ServicesScreen(),
+      // ),
+
     const ServicesScreen(),
+
     const EmployeesScreen(),
   ];
 
@@ -41,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<dynamic> bottomSheetOptions = [
       null,
       TransactionForm(context: context),
-      ServiceForm(context: context),
+      ServiceForm(),
       EmployeeForm(context: context)
     ];
 

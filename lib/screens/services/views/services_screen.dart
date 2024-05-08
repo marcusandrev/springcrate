@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:services_repository/services_repository.dart';
+import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
 import 'package:springcrate/screens/services/class_def/service.dart';
 import 'package:springcrate/screens/services/views/service_details_screen.dart';
 import 'package:springcrate/widgets/searchbar.dart';
 import 'package:springcrate/data/data.dart';
 
 class ServicesScreen extends StatelessWidget {
-  const ServicesScreen({super.key});
+  const ServicesScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          GetServicesBloc(FirebaseServiceRepo())..add(GetServices()),
+      child: const _ServiceScreen(),
+    );
+  }
+}
+
+class _ServiceScreen extends StatelessWidget {
+  const _ServiceScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,103 +58,131 @@ class ServicesScreen extends StatelessWidget {
     Color primaryColor = Theme.of(context).primaryColor;
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
 
-    return Card(
-      elevation: 4,
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${service.serviceName} - ${service.vehicleType.toUpperCase()}',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor),
-            ),
-            const SizedBox(height: 4.0),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(right: 32),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Cost',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '${service.cost}',
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Size',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      service.vehicleSize,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                const Spacer(),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.chevron_right,
-                      color: secondaryColor,
-                    ),
-                    TextButton(
-                      onPressed: null, // Add functionality here
-                      child: Text(
-                        'More info',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: secondaryColor,
+    return BlocBuilder<GetServicesBloc, GetServicesState>(
+      builder: (context, state) {
+        if (state is GetServicesLoading) {
+          return const CircularProgressIndicator();
+        } else if (state is GetServicesSuccess) {
+          print('Number of cards created: ${state.services.length}');
+
+          return SingleChildScrollView(
+            child: Column(
+              children: state.services.map((service) {
+                return Card(
+                  elevation: 4,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${service.serviceName} - ${service.vehicleType.toUpperCase()}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 4.0),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(right: 32),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Cost',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${service.cost}',
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Size',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  service.vehicleSize,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Spacer(),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: secondaryColor,
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Add functionality here
+                                  },
+                                  child: Text(
+                                    'More info',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: secondaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                  ],
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        } else {
+          return const Center(
+            child: Text("An error has occurred..."),
+          );
+        }
+      },
     );
   }
 
   Route _createRoute(BuildContext context, Service service) {
     return PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            ServiceDetailsScreen(service: service),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          ServiceDetailsScreen(service: service),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
 
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        });
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
   }
 }
