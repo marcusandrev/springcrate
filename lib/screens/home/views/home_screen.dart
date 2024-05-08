@@ -26,11 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     const MainScreen(),
     const TransactionsScreen(),
 
-      // BlocProvider(
-      //   create: (context) => GetServicesBloc( FirebaseServiceRepo())..add(GetServices()),
-      //   child:  const ServicesScreen(),
-      // ),
-
     const ServicesScreen(),
 
     const EmployeesScreen(),

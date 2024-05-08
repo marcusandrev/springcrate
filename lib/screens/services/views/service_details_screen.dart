@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:springcrate/screens/services/class_def/service.dart';
+import 'package:services_repository/services_repository.dart';
 
 class ServiceDetailsScreen extends StatelessWidget {
   const ServiceDetailsScreen({super.key, required this.service});
 
-  final Service service;
+  final Services service;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ServiceDetailsScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailWidget(context, 'Service ID', service.serviceID),
+                  _buildDetailWidget(context, 'Service ID', service.serviceId),
                   const SizedBox(height: 20),
                   GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),

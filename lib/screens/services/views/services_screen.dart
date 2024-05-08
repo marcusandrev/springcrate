@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:services_repository/services_repository.dart';
 import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
-import 'package:springcrate/screens/services/class_def/service.dart';
 import 'package:springcrate/screens/services/views/service_details_screen.dart';
 import 'package:springcrate/widgets/searchbar.dart';
-import 'package:springcrate/data/data.dart';
 
 class ServicesScreen extends StatelessWidget {
   const ServicesScreen({Key? key}) : super(key: key);
@@ -37,24 +35,14 @@ class _ServiceScreen extends StatelessWidget {
           const SizedBox(height: 20),
           SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                for (var data in servicesData)
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, _createRoute(context, data));
-                    },
-                    child: _buildTransactionsCard(context, data),
-                  )
-              ],
-            ),
+            child: _buildTransactionsCard(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTransactionsCard(BuildContext context, Service service) {
+  Widget _buildTransactionsCard(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
 
@@ -65,10 +53,21 @@ class _ServiceScreen extends StatelessWidget {
         } else if (state is GetServicesSuccess) {
           print('Number of cards created: ${state.services.length}');
 
-          return SingleChildScrollView(
-            child: Column(
-              children: state.services.map((service) {
-                return Card(
+          return Column(
+            children: state.services.map((service) {
+              return InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => ServiceDetailsScreen(
+                        service: service,
+                      ),
+                    ),
+                  );
+                },
+                child: Card(
                   elevation: 4,
                   color: Colors.white,
                   child: Padding(
@@ -133,17 +132,12 @@ class _ServiceScreen extends StatelessWidget {
                                   Icons.chevron_right,
                                   color: secondaryColor,
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Add functionality here
-                                  },
-                                  child: Text(
-                                    'More info',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: secondaryColor,
-                                    ),
+                                Text(
+                                  'More info',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: secondaryColor,
                                   ),
                                 ),
                               ],
@@ -153,9 +147,9 @@ class _ServiceScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              );
+            }).toList(),
           );
         } else {
           return const Center(
@@ -165,24 +159,26 @@ class _ServiceScreen extends StatelessWidget {
       },
     );
   }
-
-  Route _createRoute(BuildContext context, Service service) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          ServiceDetailsScreen(service: service),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
 }
+
+
+//   Route _createRoute(BuildContext context, Service service) {
+//     return PageRouteBuilder(
+//       pageBuilder: (context, animation, secondaryAnimation) =>
+//           ServiceDetailsScreen(service: service),
+//       transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//         const begin = Offset(1.0, 0.0);
+//         const end = Offset.zero;
+//         const curve = Curves.ease;
+
+//         var tween =
+//             Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+//         return SlideTransition(
+//           position: animation.drive(tween),
+//           child: child,
+//         );
+//       },
+//     );
+//   }
+// }
