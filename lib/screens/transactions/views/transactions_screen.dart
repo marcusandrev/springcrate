@@ -6,7 +6,7 @@ import 'package:springcrate/widgets/searchbar.dart';
 import 'package:transactions_repository/transactions_repository.dart';
 
 class TransactionsScreen extends StatelessWidget {
-  const TransactionsScreen({Key? key}) : super(key: key);
+  const TransactionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
