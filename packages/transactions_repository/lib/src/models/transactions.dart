@@ -35,7 +35,7 @@ class Transactions {
     plateNumber: '',
     startDate: 'A',
     endDate: 'B',
-    status: 'C',
+    status: 'Not Started',
     // serviceId: 'D',
     serviceName: '',
     vehicleType: 'F',
