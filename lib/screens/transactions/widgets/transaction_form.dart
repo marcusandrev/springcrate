@@ -109,20 +109,29 @@ class _TransactionFormState extends State<_TransactionForm> {
                     const SizedBox(height: 16.0),
                     DropdownButtonFormField<String>(
                       decoration: const InputDecoration(
-                          border: UnderlineInputBorder(),
-                          labelText: 'Select a service'),
+                        border: UnderlineInputBorder(),
+                        labelText: 'Select a service',
+                      ),
                       items: state.services.map((service) {
                         return DropdownMenuItem(
-                            value: service.serviceName,
-                            child: Row(children: [Text(service.serviceName)]));
+                          value: service.serviceName,
+                          child: Row(children: [Text(service.serviceName)]),
+                        );
                       }).toList(),
                       onChanged: (value) {
+                        final selectedService = state.services.firstWhere(
+                            (service) => service.serviceName == value);
                         setState(() {
-                          transactions.serviceName =
-                              value.toString(); // Convert value to String
+                          transactions.serviceName = value.toString();
+                          transactions.vehicleSize =
+                              selectedService.vehicleSize;
+                          transactions.vehicleType =
+                              selectedService.vehicleType;
+                          transactions.cost = selectedService.cost;
                         });
                       },
                     ),
+
                     const SizedBox(height: 20.0),
                     !creationRequired
                         ? SizedBox(
