@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final List<dynamic> bottomSheetOptions = [
       null,
-      TransactionForm(context: context),
+      TransactionForm(),
       ServiceForm(),
       EmployeeForm(context: context)
     ];

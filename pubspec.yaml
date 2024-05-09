@@ -26,6 +26,9 @@ dependencies:
   services_repository:
     path: packages/services_repository
 
+  transactions_repository:
+    path: packages/transactions_repository
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

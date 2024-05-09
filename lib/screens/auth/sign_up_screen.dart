@@ -289,6 +289,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     address: addressController.text,
                                     contactNumber: contactNumberController.text,
                                   );
+                                  print(myUser.toString());
                                   setState(() {
                                     context.read<SignUpBloc>().add(
                                         SignUpRequired(
