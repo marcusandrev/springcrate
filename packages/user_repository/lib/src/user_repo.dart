@@ -12,6 +12,8 @@ abstract class UserRepository {
 
   Future<bool> isAdmin(User user);
 
+  Future<List<MyUser>> getUsers();
+
   Future<void> logOut();
 
   //you can add options of forget password here

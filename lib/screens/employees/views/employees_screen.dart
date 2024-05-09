@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:springcrate/screens/employees/class_def/employee.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:springcrate/blocs/get_my_users/get_my_users_bloc.dart';
 import 'package:springcrate/screens/employees/views/employee_details_screen.dart';
-import 'package:springcrate/util/employee_utils.dart';
 import 'package:springcrate/widgets/searchbar.dart';
-import 'package:springcrate/data/data.dart';
+import 'package:user_repository/user_repository.dart';
 
 class EmployeesScreen extends StatelessWidget {
   const EmployeesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          GetMyUsersBloc(FirebaseUserRepo())..add(GetMyUsers()),
+      child: const _EmployeesScreen(),
+    );
+  }
+}
+
+class _EmployeesScreen extends StatelessWidget {
+  const _EmployeesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,114 +35,119 @@ class EmployeesScreen extends StatelessWidget {
           const SizedBox(height: 20),
           SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                for (var data in employeesData)
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, _createRoute(context, data));
-                    },
-                    child: _buildTransactionsCard(context, data),
-                  )
-              ],
-            ),
+            child: _buildEmployeesCard(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTransactionsCard(BuildContext context, Employee employee) {
+  Widget _buildEmployeesCard(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
-    return Card(
-      elevation: 4,
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              employee.employeeName,
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor),
-            ),
-            const SizedBox(height: 4.0),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(right: 32),
-                  child: Column(children: [
-                    const Text(
-                      'Contact No.',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    Text(employee.contactNo)
-                  ]),
-                ),
-                const SizedBox(height: 16),
-                Column(children: [
-                  const Text(
-                    'Rate',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(EmployeeUtils.stringifyRate(employee.rate))
-                ])
-              ],
-            ),
-            const SizedBox(height: 4.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.chevron_right,
-                      color: secondaryColor,
-                    ),
-                    TextButton(
-                      onPressed: null, // Add functionality here
-                      child: Text(
-                        'More info',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: secondaryColor,
-                        ),
+
+    return BlocBuilder<GetMyUsersBloc, GetMyUsersState>(
+      builder: (context, state) {
+        if (state is GetMyUsersLoading) {
+          return const CircularProgressIndicator();
+        } else if (state is GetMyUsersSuccess) {
+          print('Number of cards created: ${state.myUsers.length}');
+
+          return Column(
+            children: state.myUsers.map((myUsers) {
+              return InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => EmployeeDetailsScreen(
+                        myUsers: myUsers,
                       ),
                     ),
-                  ],
+                  );
+                },
+                child: Card(
+                  elevation: 4,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          myUsers.name,
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor),
+                        ),
+                        const SizedBox(height: 4.0),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(right: 32),
+                              child: Column(children: [
+                                const Text(
+                                  'Contact No.',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(myUsers.contactNumber)
+                              ]),
+                            ),
+                            const SizedBox(height: 16),
+                            Column(children: [
+                              const Text(
+                                'Rate',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              Text(myUsers.rate)
+                            ])
+                          ],
+                        ),
+                        const SizedBox(height: 4.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: secondaryColor,
+                                ),
+                                TextButton(
+                                  onPressed: null, // Add functionality here
+                                  child: Text(
+                                    'More info',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: secondaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Route _createRoute(BuildContext context, Employee employee) {
-    return PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            EmployeeDetailsScreen(employee: employee),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
-
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
+              );
+            }).toList(),
           );
-        });
+        } else {
+          return const Center(
+            child: Text("An error has occurred..."),
+          );
+        }
+      },
+    );
   }
 }

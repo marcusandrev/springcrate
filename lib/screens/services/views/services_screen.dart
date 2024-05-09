@@ -77,7 +77,7 @@ class _ServiceScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${service.serviceName} - ${service.vehicleType.toUpperCase()}',
+                          '${service.serviceName.toUpperCase()}',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 24,
