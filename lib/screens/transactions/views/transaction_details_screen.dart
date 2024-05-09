@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:springcrate/screens/transactions/class_def/transaction.dart';
-import 'package:springcrate/screens/transactions/widgets/assign_form.dart';
+import 'package:transactions_repository/transactions_repository.dart';
 
-class TransactionDetailsScreen extends StatelessWidget {
+class TransactionDetailsScreen extends StatefulWidget {
   const TransactionDetailsScreen({super.key, required this.transaction});
 
-  final Transaction transaction;
+  final Transactions transaction;
+
+  @override
+  _TransactionDetailsScreenState createState() =>
+      _TransactionDetailsScreenState();
+}
+
+class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
+  late Transactions transaction;
+
+  @override
+  void initState() {
+    super.initState();
+    transaction = widget.transaction;
+  }
 
   void _assignEmployee() {
     // TODO: Add logic for assigning employee
@@ -15,8 +28,8 @@ class TransactionDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final transactionDetailItems = [
       [
-        _buildDetailWidget(context, 'Plate no.', transaction.plateNo),
-        _buildDetailWidget(context, 'Service Type', transaction.service),
+        _buildDetailWidget(context, 'Plate no.', transaction.plateNumber),
+        _buildDetailWidget(context, 'Service Type', transaction.serviceName),
         _buildDetailWidget(context, 'Vehicle Type', transaction.vehicleType),
         _buildDetailWidget(context, 'Vehicle Size', transaction.vehicleSize)
       ],
@@ -29,12 +42,7 @@ class TransactionDetailsScreen extends StatelessWidget {
     ];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Transactions > ${transaction.plateNo}'),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        height: 90,
-        surfaceTintColor: Colors.grey.shade100,
-        child: _buildActionButton(context),
+        title: Text('Transactions > ${transaction.plateNumber}'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -44,7 +52,7 @@ class TransactionDetailsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildDetailWidget(
-                    context, 'Transaction ID', transaction.transactionID),
+                    context, 'Transaction ID', transaction.transactionId),
                 const SizedBox(height: 20),
                 GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -72,123 +80,97 @@ class TransactionDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildActionButton(BuildContext context) {
-    if (transaction.employeeID == null) {
-      return Column(
-        children: [
-          SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  showModalBottomSheet<dynamic>(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (BuildContext context) {
-                        return Wrap(children: [AssignForm(context: context)]);
-                      });
-                },
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10))),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    backgroundColor: MaterialStateProperty.all(Colors.orange),
-                    fixedSize:
-                        MaterialStateProperty.all(const Size.fromHeight(45))),
-                child: const Text(
-                  'ASSIGN',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              )),
-          const SizedBox(height: 4),
-          const Text(
-            'Assign the transaction to an employee to start',
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 11),
-          )
-        ],
-      );
-    }
-
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
+      bottomNavigationBar: BottomAppBar(
+        height: 90,
+        surfaceTintColor: Colors.grey.shade100,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: TextButton(
             onPressed: () {
-              showModalBottomSheet<dynamic>(
+              if (transaction.status == 'Not Started') {
+                showDialog(
                   context: context,
-                  isScrollControlled: true,
                   builder: (BuildContext context) {
-                    return Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Wrap(children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "You're about to complete a transaction.",
-                                style: TextStyle(
-                                    color: Colors.orange,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(top: 12, bottom: 32),
-                                child: Text(
-                                  "By clicking continue, you verify that the transaction was completed by the employee.",
-                                  style: TextStyle(color: Colors.grey.shade600),
-                                ),
-                              )
-                            ]),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                // TODO: Add logic for updating status from on going to completed
-                                Navigator.pop(context);
-                              },
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10))),
-                                foregroundColor:
-                                    MaterialStateProperty.all(Colors.white),
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.green),
-                                fixedSize: MaterialStateProperty.all(
-                                    const Size.fromHeight(45)),
-                              ),
-                              child: const Text('CONTINUE')),
-                        )
-                      ]),
+                    return AlertDialog(
+                      title: Text('Change Transaction Status?'),
+                      content: Text(
+                          'Do you want to change the status to "On Going"?'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('No'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              transaction.status = 'On Going';
+                            });
+                            // Add logic to update status in your repository or bloc
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Yes'),
+                        ),
+                      ],
                     );
-                  });
+                  },
+                );
+              } else if (transaction.status == 'On Going') {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Complete Transaction?'),
+                      content: Text(
+                          'Are you sure you want to complete this transaction?'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('No'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              transaction.status = 'Complete';
+                            });
+                            // Add logic to update status in your repository or bloc
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Yes'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             },
+            child: Text(
+              transaction.status == 'On Going'
+                  ? 'On Going'
+                  : (transaction.status == 'Not Started'
+                      ? 'Not Started'
+                      : 'Complete'),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
             style: ButtonStyle(
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10))),
-                foregroundColor: MaterialStateProperty.all(Colors.white),
-                backgroundColor: MaterialStateProperty.all(Colors.green),
-                fixedSize:
-                    MaterialStateProperty.all(const Size.fromHeight(45))),
-            child: const Text(
-              'COMPLETE',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              backgroundColor: MaterialStateProperty.all<Color>(
+                transaction.status == 'On Going'
+                    ? Colors.orange
+                    : (transaction.status == 'Not Started'
+                        ? Colors.red
+                        : Colors.green),
+              ),
             ),
           ),
         ),
-        const SizedBox(height: 4),
-        const Text(
-          'This transaction has been assigned to [ADD EMPLOYEE ON INTEG]',
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: 11),
-        )
-      ],
+      ),
     );
   }
 
