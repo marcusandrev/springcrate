@@ -177,10 +177,8 @@ class _TransactionFormState extends State<_TransactionForm> {
               ),
             );
           } else if (state is GetServicesFailure) {
-            // Handle failure state
             return Text('Failed to load services');
           } else {
-            // Default return
             return Text('Unknown state');
           }
         },

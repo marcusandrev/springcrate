@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:springcrate/screens/transactions/widgets/assign_form.dart';
 import 'package:transactions_repository/transactions_repository.dart';
 
 class TransactionDetailsScreen extends StatefulWidget {
