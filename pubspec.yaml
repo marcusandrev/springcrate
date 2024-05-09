@@ -29,6 +29,9 @@ dependencies:
   transactions_repository:
     path: packages/transactions_repository
 
+  employees_repository:
+    path: packages/employees_repository
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
