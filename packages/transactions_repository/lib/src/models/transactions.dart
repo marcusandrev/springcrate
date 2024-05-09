@@ -7,7 +7,7 @@ class Transactions {
   String startDate;
   String endDate;
   String status;
-  String serviceId;
+  // String serviceId;
   String serviceName;
   String vehicleType;
   String vehicleSize;
@@ -21,7 +21,7 @@ class Transactions {
     required this.startDate,
     required this.endDate,
     required this.status,
-    required this.serviceId,
+    // required this.serviceId,
     required this.serviceName,
     required this.vehicleType,
     required this.vehicleSize,
@@ -36,7 +36,7 @@ class Transactions {
     startDate: 'A',
     endDate: 'B',
     status: 'C',
-    serviceId: 'D',
+    // serviceId: 'D',
     serviceName: '',
     vehicleType: 'F',
     vehicleSize: 'G',
@@ -52,7 +52,7 @@ class Transactions {
       startDate: startDate,
       endDate: endDate,
       status: status,
-      serviceId: serviceId,
+      // serviceId: serviceId,
       serviceName: serviceName,
       vehicleType: vehicleType,
       vehicleSize: vehicleSize,
@@ -69,7 +69,7 @@ class Transactions {
       startDate: entity.startDate,
       endDate: entity.endDate,
       status: entity.status,
-      serviceId: entity.serviceId,
+      // serviceId: entity.serviceId,
       serviceName: entity.serviceName,
       vehicleType: entity.vehicleType,
       vehicleSize: entity.vehicleSize,
@@ -87,7 +87,6 @@ class Transactions {
     startDate: $startDate, 
     endDate: $endDate, 
     status: $status, 
-    serviceId: $serviceId, 
     serviceName: $serviceName, 
     vehicleType: $vehicleType, 
     vehicleSize: $vehicleSize, 

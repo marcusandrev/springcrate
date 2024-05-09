@@ -4,7 +4,7 @@ class TransactionsEntity {
   String startDate;
   String endDate;
   String status;
-  String serviceId;
+  // String serviceId;
   String serviceName;
   String vehicleType;
   String vehicleSize;
@@ -18,7 +18,7 @@ class TransactionsEntity {
     required this.startDate,
     required this.endDate,
     required this.status,
-    required this.serviceId,
+    // required this.serviceId,
     required this.serviceName,
     required this.vehicleType,
     required this.vehicleSize,
@@ -34,7 +34,7 @@ class TransactionsEntity {
       'startDate': startDate,
       'endDate': endDate,
       'status': status,
-      'serviceId': serviceId,
+      // 'serviceId': serviceId,
       'serviceName': serviceName,
       'vehicleType': vehicleType,
       'vehicleSize': vehicleSize,
@@ -51,7 +51,6 @@ class TransactionsEntity {
       startDate: doc['startDate'],
       endDate: doc['endDate'],
       status: doc['status'],
-      serviceId: doc['serviceId'],
       serviceName: doc['serviceName'],
       vehicleType: doc['vehicleType'],
       vehicleSize: doc['vehicleSize'],
