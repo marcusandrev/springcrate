@@ -3,13 +3,29 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:services_repository/services_repository.dart';
 import 'package:springcrate/blocs/create_transactions/create_transactions_bloc.dart';
+import 'package:springcrate/blocs/get_my_users/get_my_users_bloc.dart';
 import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
 import 'package:transactions_repository/transactions_repository.dart';
+import 'package:user_repository/user_repository.dart';
 
 class TransactionForm extends StatelessWidget {
   const TransactionForm({
     super.key,
   });
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return BlocProvider(
+  //     create: (_) => CreateTransactionsBloc(
+  //       transactionsRepo: FirebaseTransactionsRepo(),
+  //     ),
+  //     child: BlocProvider(
+  //       create: (_) =>
+  //           GetServicesBloc(FirebaseServiceRepo())..add(GetServices()),
+  //       child: _TransactionForm(),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +36,10 @@ class TransactionForm extends StatelessWidget {
       child: BlocProvider(
         create: (_) =>
             GetServicesBloc(FirebaseServiceRepo())..add(GetServices()),
-        child: _TransactionForm(),
+        child: BlocProvider(
+          create: (_) => GetMyUsersBloc(FirebaseUserRepo())..add(GetMyUsers()),
+          child: _TransactionForm(),
+        ),
       ),
     );
   }
@@ -55,6 +74,42 @@ class _TransactionFormState extends State<_TransactionForm> {
     print('Plate No. $_plateNo\nService: $_serviceType');
     _clear();
     Navigator.pop(context);
+  }
+
+  Widget _buildUserDropdown() {
+    return BlocBuilder<GetMyUsersBloc, GetMyUsersState>(
+      builder: (context, state) {
+        if (state is GetMyUsersLoading) {
+          return CircularProgressIndicator();
+        } else if (state is GetMyUsersSuccess) {
+          // var users = state.myUsers;
+          return DropdownButtonFormField<String>(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Select an employee',
+            ),
+            items: state.myUsers.map((myUser) {
+              return DropdownMenuItem(
+                value: myUser.name,
+                child: Row(children: [Text(myUser.name)]),
+              );
+            }).toList(),
+            onChanged: (value) {
+              final selectedUser =
+                  state.myUsers.firstWhere((myUser) => myUser.name == value);
+              setState(() {
+                transactions.name = value.toString();
+                transactions.userId = selectedUser.userId;
+              });
+            },
+          );
+        } else if (state is GetMyUsersFailure) {
+          return Text('Failed to load users');
+        } else {
+          return Text('Unknown state');
+        }
+      },
+    );
   }
 
   @override
@@ -131,6 +186,8 @@ class _TransactionFormState extends State<_TransactionForm> {
                         });
                       },
                     ),
+                    const SizedBox(height: 16.0),
+                    _buildUserDropdown(),
 
                     const SizedBox(height: 20.0),
                     !creationRequired
