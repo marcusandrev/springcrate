@@ -33,16 +33,16 @@ class Transactions {
   static var empty = Transactions(
     transactionId: Uuid().v4(),
     plateNumber: '',
-    startDate: 'A',
-    endDate: 'B',
+    startDate: '-',
+    endDate: '-',
     status: 'Not Started',
     // serviceId: 'D',
     serviceName: '',
-    vehicleType: 'F',
-    vehicleSize: 'G',
+    vehicleType: '-',
+    vehicleSize: '-',
     cost: 0,
-    userId: 'H',
-    name: 'I',
+    userId: '-',
+    name: '-',
   );
 
   TransactionsEntity toEntity() {

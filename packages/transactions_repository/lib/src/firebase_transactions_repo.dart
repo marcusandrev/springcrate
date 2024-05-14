@@ -5,14 +5,15 @@ import 'package:transactions_repository/src/entities/transactions_entity.dart';
 import 'package:transactions_repository/transactions_repository.dart';
 
 class FirebaseTransactionsRepo implements TransactionsRepo {
-  final transactionsCollection = FirebaseFirestore.instance.collection('transactions');
+  final transactionsCollection =
+      FirebaseFirestore.instance.collection('transactions');
 
   @override
   Future<List<Transactions>> getTransactions() async {
     try {
       return await transactionsCollection.get().then((value) => value.docs
-          .map(
-              (e) => Transactions.fromEntity(TransactionsEntity.fromDocument(e.data())))
+          .map((e) => Transactions.fromEntity(
+              TransactionsEntity.fromDocument(e.data())))
           .toList());
     } catch (e) {
       log(e.toString());
@@ -26,6 +27,18 @@ class FirebaseTransactionsRepo implements TransactionsRepo {
       return await transactionsCollection
           .doc(transactions.transactionId)
           .set(transactions.toEntity().toDocument());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateTransaction(Transactions transactions) async {
+    try {
+      await transactionsCollection
+          .doc(transactions.transactionId)
+          .update(transactions.toEntity().toDocument());
     } catch (e) {
       log(e.toString());
       rethrow;

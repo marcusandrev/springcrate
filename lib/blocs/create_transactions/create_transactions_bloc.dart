@@ -20,5 +20,19 @@ class CreateTransactionsBloc
         emit(CreateTransactionsFailure());
       }
     });
+
+
+    on<UpdateTransaction>((event, emit) async {
+      emit(UpdateTransactionLoading());
+      try {
+        await transactionsRepo.updateTransaction(event.transaction);
+        emit(UpdateTransactionSuccess());
+      } catch (e) {
+        emit(UpdateTransactionFailure());
+      }
+    });
+
+
+
   }
 }
