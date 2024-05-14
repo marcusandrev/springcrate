@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,9 +36,36 @@ class RegularUserScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Center(
-        child: Text('Regular User Screen'),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Hello Andre!',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 40,
+            left: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Transaction History',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          // Add your transaction history widget here
+        ],
       ),
     );
   }
 }
+
+
+

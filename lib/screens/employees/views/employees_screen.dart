@@ -99,14 +99,14 @@ class _EmployeesScreen extends StatelessWidget {
                               ]),
                             ),
                             const SizedBox(height: 16),
-                            Column(children: [
-                              const Text(
-                                'Rate',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              Text(myUsers.rate)
-                            ])
+                            // Column(children: [
+                            //   const Text(
+                            //     'Rate',
+                            //     style: TextStyle(
+                            //         fontSize: 16, fontWeight: FontWeight.bold),
+                            //   ),
+                            //   Text(myUsers.rate)
+                            // ])
                           ],
                         ),
                         const SizedBox(height: 4.0),

@@ -13,15 +13,22 @@ class TransactionDetailsScreen extends StatefulWidget {
 
 class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
   late Transactions transaction;
+  late TextEditingController startTimeController;
+  late TextEditingController fulfilledTimeController;
 
   @override
   void initState() {
     super.initState();
     transaction = widget.transaction;
+    startTimeController = TextEditingController();
+    fulfilledTimeController = TextEditingController();
   }
 
-  void _assignEmployee() {
-    // TODO: Add logic for assigning employee
+  @override
+  void dispose() {
+    startTimeController.dispose();
+    fulfilledTimeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,8 +100,18 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text('Change Transaction Status?'),
-                      content: Text(
-                          'Do you want to change the status to "On Going"?'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                              'Do you want to change the status to "On Going"?'),
+                          TextField(
+                            controller: startTimeController,
+                            decoration:
+                                InputDecoration(labelText: 'Start Time'),
+                          ),
+                        ],
+                      ),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
@@ -106,6 +123,8 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                           onPressed: () {
                             setState(() {
                               transaction.status = 'On Going';
+                              transaction.startDate =
+                                  startTimeController.text;
                             });
                             // Add logic to update status in your repository or bloc
                             Navigator.of(context).pop();
@@ -122,8 +141,18 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text('Complete Transaction?'),
-                      content: Text(
-                          'Are you sure you want to complete this transaction?'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                              'Are you sure you want to complete this transaction?'),
+                          TextField(
+                            controller: fulfilledTimeController,
+                            decoration: InputDecoration(
+                                labelText: 'Fulfilled Time'),
+                          ),
+                        ],
+                      ),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
@@ -135,6 +164,8 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                           onPressed: () {
                             setState(() {
                               transaction.status = 'Complete';
+                              transaction.endDate =
+                                  fulfilledTimeController.text;
                             });
                             // Add logic to update status in your repository or bloc
                             Navigator.of(context).pop();

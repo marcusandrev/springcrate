@@ -98,7 +98,7 @@ class _TransactionsScreen extends StatelessWidget {
                               children: [
                                 Icon(
                                   Icons.chevron_right,
-                                  color: Colors.red,
+                                  color: Colors.blue,
                                 ),
                                 TextButton(
                                   onPressed: null, // Add functionality here
@@ -107,7 +107,7 @@ class _TransactionsScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.red,
+                                      color: Colors.blue,
                                     ),
                                   ),
                                 ),
