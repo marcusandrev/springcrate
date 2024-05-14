@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:springcrate/blocs/create_transactions/create_transactions_bloc.dart';
 import 'package:transactions_repository/transactions_repository.dart';
 
@@ -34,18 +35,33 @@ class _TransactionDetailsScreen extends StatefulWidget {
 class _TransactionDetailsScreenState extends State<_TransactionDetailsScreen> {
   late TextEditingController startTimeController;
   late TextEditingController fulfilledTimeController;
-  late DateTime startDate;
-  late DateTime endDate;
+  DateTime? startDate;
+  DateTime? endDate;
   late String status;
+
+  final DateFormat _dateFormat = DateFormat('dd MMM yyyy hh:mm a');
 
   @override
   void initState() {
     super.initState();
-    startTimeController =
-        TextEditingController(text: widget.transaction.startDate);
-    fulfilledTimeController =
-        TextEditingController(text: widget.transaction.endDate);
+    startDate = _parseDate(widget.transaction.startDate);
+    endDate = _parseDate(widget.transaction.endDate);
+    startTimeController = TextEditingController(
+      text: startDate != null ? _dateFormat.format(startDate!) : '',
+    );
+    fulfilledTimeController = TextEditingController(
+      text: endDate != null ? _dateFormat.format(endDate!) : '',
+    );
     status = widget.transaction.status;
+  }
+
+  DateTime? _parseDate(String dateString) {
+    try {
+      return DateTime.parse(dateString);
+    } catch (e) {
+      print("Invalid date format: $dateString");
+      return null;
+    }
   }
 
   @override
@@ -69,8 +85,18 @@ class _TransactionDetailsScreenState extends State<_TransactionDetailsScreen> {
       [
         _buildDetailWidget(context, 'Cost', 'Php ${transaction.cost}'),
         _buildDetailWidget(context, 'Status', status),
-        _buildDetailWidget(context, 'Start Date', startTimeController.text),
-        _buildDetailWidget(context, 'End Date', fulfilledTimeController.text),
+        _buildDetailWidget(
+            context,
+            'Start Date',
+            startTimeController.text.isNotEmpty
+                ? startTimeController.text
+                : 'N/A'),
+        _buildDetailWidget(
+            context,
+            'End Date',
+            fulfilledTimeController.text.isNotEmpty
+                ? fulfilledTimeController.text
+                : 'N/A'),
       ]
     ];
 
@@ -126,14 +152,18 @@ class _TransactionDetailsScreenState extends State<_TransactionDetailsScreen> {
                     setState(() {
                       if (status == 'Not Started') {
                         status = 'On Going';
-                        startTimeController.text = DateTime.now().toString();
+                        startDate = DateTime.now();
+                        startTimeController.text =
+                            _dateFormat.format(startDate!);
                       } else if (status == 'On Going') {
                         status = 'Completed';
+                        endDate = DateTime.now();
                         fulfilledTimeController.text =
-                            DateTime.now().toString();
+                            _dateFormat.format(endDate!);
                       }
-                      transaction.startDate = startTimeController.text;
-                      transaction.endDate = fulfilledTimeController.text;
+                      transaction.startDate =
+                          startDate?.toIso8601String() ?? '';
+                      transaction.endDate = endDate?.toIso8601String() ?? '';
                       transaction.status = status;
                       context
                           .read<CreateTransactionsBloc>()
