@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:springcrate/blocs/create_transactions/create_transactions_bloc.dart';
 import 'package:springcrate/blocs/get_transactions/get_transactions_bloc.dart';
 import 'package:springcrate/screens/transactions/views/transaction_details_screen.dart';
 import 'package:springcrate/widgets/searchbar.dart';
@@ -11,11 +12,13 @@ class TransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GetTransactionsBloc(FirebaseTransactionsRepo())
-        ..add(GetTransactions()),
-      child: const _TransactionsScreen(),
-    );
+    return MultiBlocProvider(providers: [
+      BlocProvider.value(
+          value: BlocProvider.of<CreateTransactionsBloc>(context)),
+      BlocProvider(
+          create: (context) => GetTransactionsBloc(FirebaseTransactionsRepo())
+            ..add(GetTransactions()))
+    ], child: const _TransactionsScreen());
   }
 }
 
@@ -36,7 +39,16 @@ class _TransactionsScreen extends StatelessWidget {
           const SizedBox(height: 20),
           SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: _buildTransactionsCard(context),
+            child:
+                BlocListener<CreateTransactionsBloc, CreateTransactionsState>(
+              listener: (context, state) {
+                if (state is CreateTransactionsSuccess ||
+                    state is UpdateTransactionSuccess) {
+                  context.read<GetTransactionsBloc>().add(GetTransactions());
+                }
+              },
+              child: _buildTransactionsCard(context),
+            ),
           ),
         ],
       ),

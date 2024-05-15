@@ -27,6 +27,7 @@ class GetTransactionsBloc
         emit(GetTransactionsSuccess(
             transactions, monthlySales, netSalesByVehicleType));
       } catch (e) {
+        print(e);
         emit(GetTransactionsFailure());
       }
     });
@@ -37,7 +38,11 @@ class GetTransactionsBloc
 
     for (var transaction in transactions) {
       final String endDateString = transaction.endDate;
-      if (endDateString == "0000-00-00000:00:00.000000") {
+
+      try {
+        DateTime.parse(endDateString);
+      } catch (e) {
+        print(e);
         continue;
       }
 
@@ -57,31 +62,35 @@ class GetTransactionsBloc
     return monthlySales;
   }
 
-Map<String, int> calculateNetSalesByVehicleType(
-    List<Transactions> transactions) {
-  // Initialize the map with all vehicle types and zero values
-  final Map<String, int> netSalesByVehicleType = {
-    'sedan': 0,
-    'suv': 0,
-    'van': 0,
-    'pickup': 0,
-    'motorcycle': 0,
-  };
+  Map<String, int> calculateNetSalesByVehicleType(
+      List<Transactions> transactions) {
+    // Initialize the map with all vehicle types and zero values
+    final Map<String, int> netSalesByVehicleType = {
+      'sedan': 0,
+      'suv': 0,
+      'van': 0,
+      'pickup': 0,
+      'motorcycle': 0,
+    };
 
-  for (var transaction in transactions) {
-    final String endDateString = transaction.endDate;
-    if (endDateString == "0000-00-00000:00:00.000000") {
-      continue;
+    for (var transaction in transactions) {
+      final String endDateString = transaction.endDate;
+      try {
+        DateTime.parse(endDateString);
+      } catch (e) {
+        print(e);
+        continue;
+      }
+
+      final String vehicleType = transaction.vehicleType
+          .toLowerCase(); // Ensure consistency in vehicle type keys
+      final int cost = transaction.cost;
+
+      // Update the value for the corresponding vehicle type
+      netSalesByVehicleType[vehicleType] =
+          (netSalesByVehicleType[vehicleType] ?? 0) + cost;
     }
 
-    final String vehicleType = transaction.vehicleType.toLowerCase(); // Ensure consistency in vehicle type keys
-    final int cost = transaction.cost;
-
-    // Update the value for the corresponding vehicle type
-    netSalesByVehicleType[vehicleType] =
-        (netSalesByVehicleType[vehicleType] ?? 0) + cost;
+    return netSalesByVehicleType;
   }
-
-  return netSalesByVehicleType;
-}
 }

@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:springcrate/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:springcrate/blocs/create_transactions/create_transactions_bloc.dart';
 import 'package:springcrate/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:springcrate/screens/auth/welcome_screen.dart';
 import 'package:springcrate/screens/regular_user/regular_user.dart';
+import 'package:transactions_repository/transactions_repository.dart';
 
 import 'screens/home/views/home_screen.dart';
 
 class MyAppView extends StatelessWidget {
   const MyAppView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(providers: [
+      BlocProvider(
+          create: (context) => CreateTransactionsBloc(
+              transactionsRepo: FirebaseTransactionsRepo())),
+    ], child: const _MyAppView());
+  }
+}
+
+class _MyAppView extends StatelessWidget {
+  const _MyAppView({super.key});
 
   @override
   Widget build(BuildContext context) {
