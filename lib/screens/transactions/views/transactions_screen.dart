@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:springcrate/blocs/get_transactions/get_transactions_bloc.dart';
 import 'package:springcrate/screens/transactions/views/transaction_details_screen.dart';
 import 'package:springcrate/widgets/searchbar.dart';
@@ -44,6 +45,7 @@ class _TransactionsScreen extends StatelessWidget {
 
   Widget _buildTransactionsCard(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
+    final DateFormat _dateFormat = DateFormat('dd MMM yyyy hh:mm a');
 
     return BlocBuilder<GetTransactionsBloc, GetTransactionsState>(
       builder: (context, state) {
@@ -54,6 +56,15 @@ class _TransactionsScreen extends StatelessWidget {
 
           return Column(
             children: state.transactions.map((transaction) {
+              String formattedStartDate = '';
+              try {
+                final DateTime parsedStartDate =
+                    DateTime.parse(transaction.startDate);
+                formattedStartDate = _dateFormat.format(parsedStartDate);
+              } catch (e) {
+                print("Invalid date format: ${transaction.startDate}");
+              }
+
               return InkWell(
                 borderRadius: BorderRadius.circular(8),
                 onTap: () {
@@ -93,7 +104,7 @@ class _TransactionsScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('${transaction.startDate}'),
+                            Text(formattedStartDate),
                             Row(
                               children: [
                                 Icon(
@@ -101,7 +112,7 @@ class _TransactionsScreen extends StatelessWidget {
                                   color: Colors.blue,
                                 ),
                                 TextButton(
-                                  onPressed: null, // Add functionality here
+                                  onPressed: null,
                                   child: Text(
                                     '${transaction.status}',
                                     style: TextStyle(
