@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:services_repository/services_repository.dart';
+import 'package:springcrate/blocs/create_services/create_services_bloc.dart';
 import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
 import 'package:springcrate/screens/services/views/service_details_screen.dart';
 import 'package:springcrate/widgets/searchbar.dart';
@@ -34,15 +35,20 @@ class _ServiceScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: _buildTransactionsCard(context),
-          ),
+              padding: const EdgeInsets.all(16),
+              child: BlocListener<CreateServicesBloc, CreateServicesState>(
+                  listener: (context, state) {
+                    if (state is CreateServicesSuccess) {
+                      context.read<GetServicesBloc>().add(GetServices());
+                    }
+                  },
+                  child: _buildServicesCard(context))),
         ],
       ),
     );
   }
 
-  Widget _buildTransactionsCard(BuildContext context) {
+  Widget _buildServicesCard(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
 

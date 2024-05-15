@@ -11,10 +11,14 @@ class ServiceForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => CreateServicesBloc(
-        serviceRepo: FirebaseServiceRepo(),
-      ),
+    // return BlocProvider(
+    //   create: (_) => CreateServicesBloc(
+    //     serviceRepo: FirebaseServiceRepo(),
+    //   ),
+    //   child: _ServiceForm(),
+    // );
+    return BlocProvider.value(
+      value: BlocProvider.of<CreateServicesBloc>(context),
       child: _ServiceForm(),
     );
   }
@@ -75,6 +79,7 @@ class _ServiceFormState extends State<_ServiceForm> {
             setState(() {
               creationRequired = false;
             });
+            Navigator.pop(context);
           } else if (state is CreateServicesLoading) {
             setState(() {
               creationRequired = true;
@@ -88,7 +93,7 @@ class _ServiceFormState extends State<_ServiceForm> {
             child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
                       'Service Details',
@@ -112,14 +117,8 @@ class _ServiceFormState extends State<_ServiceForm> {
                           labelText: 'Enter Service Name'),
                     ),
                     const SizedBox(height: 16.0),
-                    const Text(
-                      'Select Promos',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
                     MultiSelectChipField(
-                      showHeader: false,
+                      showHeader: true,
                       chipColor: const Color(0x00000000),
                       textStyle: const TextStyle(color: Colors.black),
                       decoration: const BoxDecoration(border: null),

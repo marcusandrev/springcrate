@@ -29,19 +29,16 @@ class TransactionForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => CreateTransactionsBloc(
-        transactionsRepo: FirebaseTransactionsRepo(),
+    return MultiBlocProvider(providers: [
+      BlocProvider.value(
+        value: BlocProvider.of<CreateTransactionsBloc>(context),
       ),
-      child: BlocProvider(
-        create: (_) =>
-            GetServicesBloc(FirebaseServiceRepo())..add(GetServices()),
-        child: BlocProvider(
-          create: (_) => GetMyUsersBloc(FirebaseUserRepo())..add(GetMyUsers()),
-          child: _TransactionForm(),
-        ),
-      ),
-    );
+      BlocProvider(
+          create: (_) =>
+              GetServicesBloc(FirebaseServiceRepo())..add(GetServices())),
+      BlocProvider(
+          create: (_) => GetMyUsersBloc(FirebaseUserRepo())..add(GetMyUsers()))
+    ], child: _TransactionForm());
   }
 }
 
@@ -54,8 +51,6 @@ class _TransactionFormState extends State<_TransactionForm> {
   final plateNumberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  String _plateNo = '';
-  String _serviceType = '';
   bool creationRequired = false;
   late Transactions transactions;
 
@@ -65,22 +60,13 @@ class _TransactionFormState extends State<_TransactionForm> {
     super.initState();
   }
 
-  void _clear() {
-    _plateNo = '';
-  }
-
-  void _onSubmit() {
-    // TODO: Add logic for adding document to firebase
-    print('Plate No. $_plateNo\nService: $_serviceType');
-    _clear();
-    Navigator.pop(context);
-  }
+  void _clear() {}
 
   Widget _buildUserDropdown() {
     return BlocBuilder<GetMyUsersBloc, GetMyUsersState>(
       builder: (context, state) {
         if (state is GetMyUsersLoading) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (state is GetMyUsersSuccess) {
           // var users = state.myUsers;
           return DropdownButtonFormField<String>(
@@ -112,134 +98,134 @@ class _TransactionFormState extends State<_TransactionForm> {
     );
   }
 
+  Widget _buildServiceDropdown() {
+    return BlocBuilder<GetServicesBloc, GetServicesState>(
+      builder: (context, state) {
+        if (state is GetServicesLoading) {
+          return const CircularProgressIndicator();
+        }
+        if (state is GetServicesSuccess) {
+          return DropdownButtonFormField<String>(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Select a service',
+            ),
+            items: state.services.map((service) {
+              return DropdownMenuItem(
+                value: service.serviceName,
+                child: Row(children: [Text(service.serviceName)]),
+              );
+            }).toList(),
+            onChanged: (value) {
+              final selectedService = state.services
+                  .firstWhere((service) => service.serviceName == value);
+              setState(() {
+                transactions.serviceName = value.toString();
+                transactions.vehicleSize = selectedService.vehicleSize;
+                transactions.vehicleType = selectedService.vehicleType;
+                transactions.cost = selectedService.cost;
+              });
+            },
+          );
+        } else if (state is GetServicesFailure) {
+          return Text('Failed to load services');
+        } else {
+          return Text('Unknown state');
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<CreateTransactionsBloc, CreateTransactionsState>(
-      listener: (context, state) {
-        if (state is CreateTransactionsSuccess) {
-          setState(() {
-            creationRequired = false;
-          });
-        } else if (state is CreateTransactionsLoading) {
-          setState(() {
-            creationRequired = true;
-          });
-        } else if (state is CreateTransactionsFailure) {
-          return;
-        }
-      },
-      child: BlocBuilder<GetServicesBloc, GetServicesState>(
-        builder: (context, state) {
-          if (state is GetServicesLoading) {
-            // Handle loading state
-            return CircularProgressIndicator();
-          } else if (state is GetServicesSuccess) {
-            // Use the loaded services to populate the dropdown
-            return Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Transaction Details',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    TextFormField(
-                      controller: plateNumberController,
-                      obscureText: false,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                          border: UnderlineInputBorder(),
-                          labelText: 'Enter Plate number'),
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Please fill in this field';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16.0),
-                    DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        labelText: 'Select a service',
-                      ),
-                      items: state.services.map((service) {
-                        return DropdownMenuItem(
-                          value: service.serviceName,
-                          child: Row(children: [Text(service.serviceName)]),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        final selectedService = state.services.firstWhere(
-                            (service) => service.serviceName == value);
-                        setState(() {
-                          transactions.serviceName = value.toString();
-                          transactions.vehicleSize =
-                              selectedService.vehicleSize;
-                          transactions.vehicleType =
-                              selectedService.vehicleType;
-                          transactions.cost = selectedService.cost;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16.0),
-                    _buildUserDropdown(),
-
-                    const SizedBox(height: 20.0),
-                    !creationRequired
-                        ? SizedBox(
-                            width: double.infinity,
-                            child: TextButton(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    setState(() {
-                                      transactions.plateNumber =
-                                          plateNumberController.text;
-                                    });
-                                    print(transactions.toString());
-                                    context
-                                        .read<CreateTransactionsBloc>()
-                                        .add(CreateTransactions(transactions));
-                                  }
-                                },
-                                style: TextButton.styleFrom(
-                                    elevation: 3.0,
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(60))),
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 25, vertical: 5),
-                                  child: Text(
-                                    'Add Transaction',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                )),
-                          )
-                        : const CircularProgressIndicator(),
-                    // ),
-                  ],
-                ),
-              ),
-            );
-          } else if (state is GetServicesFailure) {
-            return Text('Failed to load services');
-          } else {
-            return Text('Unknown state');
+        listener: (context, state) {
+          if (state is CreateTransactionsSuccess) {
+            setState(() {
+              creationRequired = false;
+            });
+            Navigator.pop(context, true);
+          } else if (state is CreateTransactionsLoading) {
+            setState(() {
+              creationRequired = true;
+            });
+          } else if (state is CreateTransactionsFailure) {
+            return;
           }
         },
-      ),
-    );
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'Transaction Details',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                TextFormField(
+                  controller: plateNumberController,
+                  obscureText: false,
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Enter Plate number'),
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'Please fill in this field';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+
+                _buildServiceDropdown(),
+                const SizedBox(height: 16.0),
+                _buildUserDropdown(),
+
+                const SizedBox(height: 20.0),
+                !creationRequired
+                    ? SizedBox(
+                        width: double.infinity,
+                        child: TextButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  transactions.plateNumber =
+                                      plateNumberController.text;
+                                });
+                                print(transactions.toString());
+                                context
+                                    .read<CreateTransactionsBloc>()
+                                    .add(CreateTransactions(transactions));
+                              }
+                            },
+                            style: TextButton.styleFrom(
+                                elevation: 3.0,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(60))),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 5),
+                              child: Text(
+                                'Add Transaction',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            )),
+                      )
+                    : const CircularProgressIndicator(),
+                // ),
+              ],
+            ),
+          ),
+        ));
   }
 }

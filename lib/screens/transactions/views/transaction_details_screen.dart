@@ -12,10 +12,8 @@ class TransactionDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => CreateTransactionsBloc(
-        transactionsRepo: FirebaseTransactionsRepo(),
-      ),
+    return BlocProvider.value(
+      value: BlocProvider.of<CreateTransactionsBloc>(context),
       child: _TransactionDetailsScreen(transaction: transaction),
     );
   }
