@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:springcrate/blocs/get_transactions/get_transactions_bloc.dart';
 import 'package:springcrate/screens/home/chart.dart';
-import 'package:springcrate/data/data.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:springcrate/util/string_utils.dart';
 import 'package:transactions_repository/transactions_repository.dart';
@@ -26,12 +25,20 @@ class _MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> vehicleIcons = {
+      'sedan': 'lib/assets/sedan.svg',
+      'suv': 'lib/assets/suv.svg',
+      'pickup': 'lib/assets/pickup.svg',
+      'motorcycle': 'lib/assets/motorbike.svg',
+      'van': 'lib/assets/motorbike.svg',
+    };
     return BlocBuilder<GetTransactionsBloc, GetTransactionsState>(
       builder: (context, state) {
         if (state is GetTransactionsLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is GetTransactionsSuccess) {
           final monthlySales = state.monthlySales;
+          final netSalesByVehicleType = state.netSalesByVehicleType;
 
           return Padding(
             padding:
@@ -77,7 +84,9 @@ class _MainScreen extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.width,
-                  child: MyChart(monthlySales: monthlySales,),
+                  child: MyChart(
+                    monthlySales: monthlySales,
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -118,14 +127,12 @@ class _MainScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      for (var data in netSalesData)
+                      for (var entry in netSalesByVehicleType.entries)
                         _buildCard(
                           context,
-                          data['icon'],
-                          StringUtils.capitalize(data['vehicle_type']),
-                          StringUtils.formatSales(data['sales']),
-                          data['month'],
-                          data['year'],
+                          vehicleIcons[entry.key]!,
+                          StringUtils.capitalize(entry.key),
+                          entry.value,
                         ),
                     ],
                   ),
@@ -144,11 +151,12 @@ class _MainScreen extends StatelessWidget {
     BuildContext context,
     String iconPath,
     String vehicleType,
-    String sales,
-    String month,
-    String year,
+    int netSales,
   ) {
     Color primaryColor = Theme.of(context).primaryColor;
+    if (vehicleType.toLowerCase() == "motorcycle") {
+      vehicleType = "MOTORBIKE";
+    }
     return Card(
       elevation: 4,
       child: Container(
@@ -170,14 +178,9 @@ class _MainScreen extends StatelessWidget {
               ),
             ),
             Text(
-              "Php $sales",
+              "Php $netSales",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 24, color: Colors.grey),
-            ),
-            Text(
-              "$month $year",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],
         ),

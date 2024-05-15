@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:services_repository/services_repository.dart';
-import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
 import 'package:springcrate/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:springcrate/screens/employees/widgets/employee_form.dart';
 import 'package:springcrate/screens/home/views/main_screen.dart';
@@ -25,9 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const MainScreen(),
     const TransactionsScreen(),
-
     const ServicesScreen(),
-
     const EmployeesScreen(),
   ];
 
@@ -112,22 +108,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (bottomSheetForm != null) {
-            showModalBottomSheet<dynamic>(
-                isScrollControlled: true,
-                context: context,
-                builder: (BuildContext context) {
-                  return Wrap(
-                    children: [bottomSheetForm],
-                  );
-                });
-          }
-        },
-        shape: const CircleBorder(),
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: _selectedIndex == 0 || _selectedIndex == 3
+          ? null
+          : FloatingActionButton(
+              onPressed: () {
+                if (bottomSheetForm != null) {
+                  showModalBottomSheet<dynamic>(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Wrap(
+                          children: [bottomSheetForm],
+                        );
+                      });
+                }
+              },
+              shape: const CircleBorder(),
+              child: Icon(Icons.add),
+            ),
     );
   }
 }
