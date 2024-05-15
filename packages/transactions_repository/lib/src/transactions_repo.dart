@@ -4,4 +4,5 @@ abstract class TransactionsRepo {
   Future<List<Transactions>> getTransactions();
   Future<void> createTransactions(Transactions transactions);
   Future<void> updateTransaction(Transactions transactions);
+  Future<void> deleteTransaction(String transactionId);
 }

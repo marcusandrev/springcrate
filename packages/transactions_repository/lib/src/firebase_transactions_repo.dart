@@ -44,4 +44,14 @@ class FirebaseTransactionsRepo implements TransactionsRepo {
       rethrow;
     }
   }
+
+  @override
+  Future<void> deleteTransaction(String transactionId) async {
+    try {
+      await transactionsCollection.doc(transactionId).delete();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

@@ -11,12 +11,7 @@ class ServiceForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return BlocProvider(
-    //   create: (_) => CreateServicesBloc(
-    //     serviceRepo: FirebaseServiceRepo(),
-    //   ),
-    //   child: _ServiceForm(),
-    // );
+
     return BlocProvider.value(
       value: BlocProvider.of<CreateServicesBloc>(context),
       child: _ServiceForm(),
@@ -25,12 +20,6 @@ class ServiceForm extends StatelessWidget {
 }
 
 class _ServiceForm extends StatefulWidget {
-  // const ServiceForm({super.key});
-
-  // @override
-  // ServiceFormState createState() {
-  //   return ServiceFormState();
-  // }
   @override
   _ServiceFormState createState() => _ServiceFormState();
 }
