@@ -33,8 +33,8 @@ class Transactions {
   static var empty = Transactions(
     transactionId: Uuid().v4(),
     plateNumber: '',
-    startDate: '-',
-    endDate: '-',
+    startDate: '0000-00-00000:00:00.000000',
+    endDate: '0000-00-00000:00:00.000000',
     status: 'Not Started',
     // serviceId: 'D',
     serviceName: '',
