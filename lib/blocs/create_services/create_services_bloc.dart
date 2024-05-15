@@ -20,5 +20,15 @@ class CreateServicesBloc
         emit(CreateServicesFailure());
       }
     });
+
+    on<UpdateService>((event, emit) async {
+      emit(UpdateServiceLoading());
+      try {
+        await serviceRepo.updateService(event.services);
+        emit(UpdateServiceSuccess());
+      } catch (e) {
+        emit(UpdateServiceFailure());
+      }
+    });
   }
 }
