@@ -98,18 +98,18 @@ class MyChart extends StatelessWidget {
 
   Widget getTitles(int value, List<String> monthNames) {
     const List<String> monthLabels = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
+      'jan',
+      'feb',
+      'mar',
+      'apr',
+      'may',
+      'jun',
+      'jul',
+      'aug',
+      'sep',
+      'oct',
+      'nov',
+      'dec',
     ];
 
     if (value >= 0 && value < monthLabels.length) {
