@@ -1,110 +1,142 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:springcrate/blocs/get_transactions/get_transactions_bloc.dart';
 import 'package:springcrate/screens/home/chart.dart';
 import 'package:springcrate/data/data.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:springcrate/util/string_utils.dart';
+import 'package:transactions_repository/transactions_repository.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "2024",
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                  ),
-                  Text(
-                    "Gross Sales",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ],
-              ),
-              // ElevatedButton(
-              //   onPressed: () {},
-              //   child: Text('Export'),
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Theme.of(context).colorScheme.secondary,
-              //     foregroundColor: Colors.white,
-              //   ),
-              // ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width,
-            child: const MyChart(),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Net Sales",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  Text(
-                    "per vehicle",
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-              const Icon(
-                Icons.filter_list,
-                color: Colors.blue,
-                size: 24.0,
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return BlocProvider(
+      create: (context) => GetTransactionsBloc(FirebaseTransactionsRepo())
+        ..add(GetTransactions()),
+      child: const _MainScreen(),
+    );
+  }
+}
+
+class _MainScreen extends StatelessWidget {
+  const _MainScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GetTransactionsBloc, GetTransactionsState>(
+      builder: (context, state) {
+        if (state is GetTransactionsLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is GetTransactionsSuccess) {
+          final monthlySales = state.monthlySales;
+
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (var data in netSalesData)
-                  _buildCard(
-                    context,
-                    data['icon'],
-                    StringUtils.capitalize(data['vehicle_type']),
-                    StringUtils.formatSales(data['sales']),
-                    data['month'],
-                    data['year'],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "2024",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        ),
+                        Text(
+                          "Gross Sales",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Export'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width,
+                  child: MyChart(monthlySales: monthlySales,),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Net Sales",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        Text(
+                          "per vehicle",
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                    const Icon(
+                      Icons.filter_list,
+                      color: Colors.blue,
+                      size: 24.0,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      for (var data in netSalesData)
+                        _buildCard(
+                          context,
+                          data['icon'],
+                          StringUtils.capitalize(data['vehicle_type']),
+                          StringUtils.formatSales(data['sales']),
+                          data['month'],
+                          data['year'],
+                        ),
+                    ],
                   ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
+          );
+        } else {
+          return const Center(child: Text("An error has occurred..."));
+        }
+      },
     );
   }
 
