@@ -13,6 +13,7 @@ class GetMyUsersBloc extends Bloc<GetMyUsersEvent, GetMyUsersState> {
       emit(GetMyUsersLoading());
       try {
         List<MyUser> users = await _userRepository.getUsers();
+        users = users.where((user) => !user.isAdmin).toList();
         emit(GetMyUsersSuccess(users));
       } catch (e) {
         emit(GetMyUsersFailure());
