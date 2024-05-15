@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:services_repository/services_repository.dart';
 import 'package:springcrate/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:springcrate/blocs/create_services/create_services_bloc.dart';
 import 'package:springcrate/blocs/create_transactions/create_transactions_bloc.dart';
 import 'package:springcrate/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:springcrate/screens/auth/welcome_screen.dart';
@@ -18,6 +20,10 @@ class MyAppView extends StatelessWidget {
       BlocProvider(
           create: (context) => CreateTransactionsBloc(
               transactionsRepo: FirebaseTransactionsRepo())),
+      BlocProvider(
+          create: (_) => CreateServicesBloc(
+                serviceRepo: FirebaseServiceRepo(),
+              ))
     ], child: const _MyAppView());
   }
 }
