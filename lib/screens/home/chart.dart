@@ -17,37 +17,37 @@ class _MyChartState extends State<MyChart> {
   BarChartGroupData makeGroupData(int x, double y) {
     return BarChartGroupData(x: x, barRods: [
       BarChartRodData(
-          toY: y, width: 20, color: Theme.of(context).colorScheme.secondary)
+          toY: y, width: 50, color: Theme.of(context).colorScheme.secondary)
     ]);
   }
 
   List<BarChartGroupData> showingGroups() {
-    return List.generate(12, (i) {
+    return List.generate(1, (i) {
       switch (i) {
         case 0:
-          return makeGroupData(0, 5);
-        case 1:
-          return makeGroupData(1, 6.5);
-        case 2:
-          return makeGroupData(2, 5);
-        case 3:
-          return makeGroupData(3, 2);
-        case 4:
-          return makeGroupData(4, 6);
-        case 5:
-          return makeGroupData(5, 8.5);
-        case 6:
-          return makeGroupData(6, 7);
-        case 7:
-          return makeGroupData(7, 3);
-        case 8:
-          return makeGroupData(8, 8);
-        case 9:
-          return makeGroupData(9, 5);
-        case 10:
-          return makeGroupData(10, 9);
-        case 11:
-          return makeGroupData(11, 11.5);
+          return makeGroupData(0, 4600);
+        // case 1:
+        //   return makeGroupData(1, 3500);
+        // case 2:
+        //   return makeGroupData(2, 5);
+        // case 3:
+        //   return makeGroupData(3, 2);
+        // case 4:
+        //   return makeGroupData(4, 6);
+        // case 5:
+        //   return makeGroupData(5, 8.5);
+        // case 6:
+        //   return makeGroupData(6, 7);
+        // case 7:
+        //   return makeGroupData(7, 3);
+        // case 8:
+        //   return makeGroupData(8, 8);
+        // case 9:
+        //   return makeGroupData(9, 5);
+        // case 10:
+        //   return makeGroupData(10, 9);
+        // case 11:
+        //   return makeGroupData(11, 11.5);
         default:
           return throw Error();
       }
@@ -86,76 +86,76 @@ class _MyChartState extends State<MyChart> {
     switch (value.toInt()) {
       case 0:
         text = Text(
-          'jan',
-          style: style,
-        );
-        break;
-      case 1:
-        text = Text(
-          'feb',
-          style: style,
-        );
-        break;
-      case 2:
-        text = Text(
-          'mar',
-          style: style,
-        );
-        break;
-      case 3:
-        text = Text(
-          'apr',
-          style: style,
-        );
-        break;
-      case 4:
-        text = Text(
           'may',
           style: style,
         );
         break;
-      case 5:
-        text = Text(
-          'jun',
-          style: style,
-        );
-        break;
-      case 6:
-        text = Text(
-          'jul',
-          style: style,
-        );
-        break;
-      case 7:
-        text = Text(
-          'aug',
-          style: style,
-        );
-        break;
-      case 8:
-        text = Text(
-          'sep',
-          style: style,
-        );
-        break;
-      case 9:
-        text = Text(
-          'oct',
-          style: style,
-        );
-        break;
-      case 10:
-        text = Text(
-          'nov',
-          style: style,
-        );
-        break;
-      case 11:
-        text = Text(
-          'dec',
-          style: style,
-        );
-        break;
+      // case 1:
+      //   text = Text(
+      //     'may',
+      //     style: style,
+      //   );
+      //   break;
+      // case 2:
+      //   text = Text(
+      //     'mar',
+      //     style: style,
+      //   );
+      //   break;
+      // case 3:
+      //   text = Text(
+      //     'apr',
+      //     style: style,
+      //   );
+      //   break;
+      // case 4:
+      //   text = Text(
+      //     'may',
+      //     style: style,
+      //   );
+      //   break;
+      // case 5:
+      //   text = Text(
+      //     'jun',
+      //     style: style,
+      //   );
+      //   break;
+      // case 6:
+      //   text = Text(
+      //     'jul',
+      //     style: style,
+      //   );
+      //   break;
+      // case 7:
+      //   text = Text(
+      //     'aug',
+      //     style: style,
+      //   );
+      //   break;
+      // case 8:
+      //   text = Text(
+      //     'sep',
+      //     style: style,
+      //   );
+      //   break;
+      // case 9:
+      //   text = Text(
+      //     'oct',
+      //     style: style,
+      //   );
+      //   break;
+      // case 10:
+      //   text = Text(
+      //     'nov',
+      //     style: style,
+      //   );
+      //   break;
+      // case 11:
+      //   text = Text(
+      //     'dec',
+      //     style: style,
+      //   );
+      //   break;
       default:
         text = const SizedBox();
     }

@@ -15,3 +15,12 @@ class CreateTransactions extends CreateTransactionsEvent {
   @override
   List<Object> get props => [transactions];
 }
+
+class UpdateTransaction extends CreateTransactionsEvent {
+  final Transactions transaction;
+
+  const UpdateTransaction(this.transaction);
+
+  @override
+  List<Object> get props => [transaction];
+}
