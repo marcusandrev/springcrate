@@ -14,10 +14,11 @@ final class GetTransactionsFailure extends GetTransactionsState {}
 final class GetTransactionsSuccess extends GetTransactionsState {
   final List<Transactions> transactions;
    final Map<String, int> monthlySales;
+   final Map<String, int> netSalesByVehicleType;
 
 
-  const GetTransactionsSuccess(this.transactions, this.monthlySales);
+  const GetTransactionsSuccess(this.transactions, this.monthlySales, this.netSalesByVehicleType);
 
   @override
-  List<Object> get props => [transactions, monthlySales];
+  List<Object> get props => [transactions, monthlySales, netSalesByVehicleType];
 }

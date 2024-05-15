@@ -18,7 +18,14 @@ class GetTransactionsBloc
             await _transactionsRepo.getTransactions();
         Map<String, int> monthlySales =
             calculateMonthlyGrossSales(transactions);
-        emit(GetTransactionsSuccess(transactions, monthlySales));
+        Map<String, int> netSalesByVehicleType =
+            calculateNetSalesByVehicleType(transactions);
+        print("Net Sales by Vehicle Type:");
+        netSalesByVehicleType.forEach((vehicleType, netSales) {
+          print("$vehicleType: Php ${netSales.toString()}");
+        });
+        emit(GetTransactionsSuccess(
+            transactions, monthlySales, netSalesByVehicleType));
       } catch (e) {
         emit(GetTransactionsFailure());
       }
@@ -49,4 +56,32 @@ class GetTransactionsBloc
 
     return monthlySales;
   }
+
+Map<String, int> calculateNetSalesByVehicleType(
+    List<Transactions> transactions) {
+  // Initialize the map with all vehicle types and zero values
+  final Map<String, int> netSalesByVehicleType = {
+    'sedan': 0,
+    'suv': 0,
+    'van': 0,
+    'pickup': 0,
+    'motorcycle': 0,
+  };
+
+  for (var transaction in transactions) {
+    final String endDateString = transaction.endDate;
+    if (endDateString == "0000-00-00000:00:00.000000") {
+      continue;
+    }
+
+    final String vehicleType = transaction.vehicleType.toLowerCase(); // Ensure consistency in vehicle type keys
+    final int cost = transaction.cost;
+
+    // Update the value for the corresponding vehicle type
+    netSalesByVehicleType[vehicleType] =
+        (netSalesByVehicleType[vehicleType] ?? 0) + cost;
+  }
+
+  return netSalesByVehicleType;
+}
 }
