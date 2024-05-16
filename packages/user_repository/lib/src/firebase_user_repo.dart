@@ -76,6 +76,23 @@ class FirebaseUserRepo implements UserRepository {
   }
 
   @override
+  Future<List<MyUser>> getQueriedUsers(String search) async {
+    final usersCollection = FirebaseFirestore.instance
+        .collection('users')
+        .where('name', isGreaterThanOrEqualTo: search)
+        .where('name', isLessThan: '${search}z');
+
+    try {
+      return await usersCollection.get().then((value) => value.docs
+          .map((e) => MyUser.fromEntity(MyUserEntity.fromDocument(e.data())))
+          .toList());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
   Future<bool> isAdmin(User user) async {
     try {
       final userData = await usersCollection.doc(user.uid).get();

@@ -18,5 +18,16 @@ class GetServicesBloc extends Bloc<GetServicesEvent, GetServicesState> {
         emit(GetServicesFailure());
       }
     });
+
+    on<SearchServices>((event, emit) async {
+      emit(GetServicesLoading());
+      try {
+        List<Services> services =
+            await _servicesRepo.getQueriedServices(event.query);
+        emit(GetServicesSuccess(services));
+      } catch (e) {
+        emit(GetServicesFailure());
+      }
+    });
   }
 }

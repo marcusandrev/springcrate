@@ -30,8 +30,10 @@ class _ServiceScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
           Searchbar(
+            searchContext: "Services",
             borderColor: Theme.of(context).colorScheme.primary,
             iconColor: Theme.of(context).colorScheme.primary,
+            context: context,
           ),
           const SizedBox(height: 20),
           SingleChildScrollView(

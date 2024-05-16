@@ -8,3 +8,12 @@ sealed class GetMyUsersEvent extends Equatable {
 }
 
 class GetMyUsers extends GetMyUsersEvent {}
+
+class SearchEmployees extends GetMyUsersEvent {
+  final String query;
+
+  const SearchEmployees(this.query);
+
+  @override
+  List<Object> get props => [query];
+}
