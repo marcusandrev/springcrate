@@ -56,11 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        // shape: const RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.vertical(
-        //     bottom: Radius.circular(40),
-        //   ),
-        // ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

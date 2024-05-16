@@ -6,7 +6,7 @@ import 'package:springcrate/blocs/create_services/create_services_bloc.dart';
 import 'package:springcrate/blocs/create_transactions/create_transactions_bloc.dart';
 import 'package:springcrate/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:springcrate/screens/auth/welcome_screen.dart';
-import 'package:springcrate/screens/regular_user/regular_user.dart';
+import 'package:springcrate/screens/regular_user/regular_main.dart';
 import 'package:transactions_repository/transactions_repository.dart';
 
 import 'screens/home/views/home_screen.dart';
