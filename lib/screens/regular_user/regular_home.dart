@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:springcrate/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:springcrate/blocs/get_transactions_by_userId/get_transactions_by_user_id_bloc.dart';
 import 'package:transactions_repository/transactions_repository.dart';
-import 'package:user_repository/user_repository.dart';
 
 class RegularHomeScreen extends StatelessWidget {
   final String userId;
@@ -75,40 +74,33 @@ class _RegularHomeScreen extends StatelessWidget {
         _buildDetailWidget(context, 'Employee Name', transactions[0].name),
         _buildDetailWidget(
             context, 'Total Earnings', 'Php ${totalCost.toStringAsFixed(2)}'),
-        // _buildDetailWidget(context, 'Contact Number', myUsers.contactNumber),
-        // _buildDetailWidget(context, 'Address', myUsers.address),
       ]
     ];
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3.5,
-                ),
-                itemCount: employeeDetailItems[0].length,
-                itemBuilder: ((context, index) =>
-                    employeeDetailItems[0][index]),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Recent Transactions',
-                style: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              _buildTransactionsList(context, transactions),
-            ],
-          )
+          GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3.5,
+            ),
+            itemCount: employeeDetailItems[0].length,
+            itemBuilder: ((context, index) => employeeDetailItems[0][index]),
+          ),
+          SizedBox(height: 20),
+          Text(
+            'Recent Transactions',
+            style: TextStyle(
+              color: Colors.grey[800],
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          _buildTransactionsList(context, transactions),
         ],
       ),
     );
@@ -140,6 +132,7 @@ Widget _buildTransactionsList(
     children: [
       ListView.builder(
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: transactions.length,
         itemBuilder: (context, index) {
           final transaction = transactions[index];
@@ -195,7 +188,7 @@ Widget _buildTransactionsList(
             ),
           );
         },
-      )
+      ),
     ],
   );
 }

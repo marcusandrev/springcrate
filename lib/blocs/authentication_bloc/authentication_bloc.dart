@@ -35,6 +35,26 @@ class AuthenticationBloc
         emit(const AuthenticationState.unauthenticated());
       }
     });
+
+    on<UpdateProfile>((event, emit) async {
+      if (state.status == AuthenticationStatus.authenticated) {
+        final updatedUserDetails = await userRepository.updateUserDetails(
+          state.user!,
+          event.newName,
+          event.newAddress,
+          event.newContactNumber,
+        );
+        emit(AuthenticationState.authenticated(
+          user: state.user!,
+          isAdmin: state.isAdmin,
+          address: updatedUserDetails.address,
+          contactNumber: updatedUserDetails.contactNumber,
+          name: updatedUserDetails.name,
+          rate: updatedUserDetails.rate,
+          userId: updatedUserDetails.userId,
+        ));
+      }
+    });
   }
 
   @override

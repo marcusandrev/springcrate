@@ -19,5 +19,15 @@ class CheckAdmin extends AuthenticationEvent {
   const CheckAdmin(this.user);
 }
 
+class UpdateProfile extends AuthenticationEvent {
+  final String newName;
+  final String newAddress;
+  final String newContactNumber;
+
+  const UpdateProfile(this.newName, this.newAddress, this.newContactNumber);
+
+  @override
+  List<Object> get props => [newName, newAddress, newContactNumber];
+}
 
 

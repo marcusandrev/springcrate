@@ -114,4 +114,28 @@ class FirebaseUserRepo implements UserRepository {
       throw e;
     }
   }
+
+  @override
+  Future<MyUser> updateUserDetails(User user, String newName, String newAddress,
+      String newContactNumber) async {
+    try {
+      final userData = await usersCollection.doc(user.uid).get();
+      if (userData.exists) {
+        await usersCollection.doc(user.uid).update({
+          'name': newName,
+          'address': newAddress,
+          'contactNumber': newContactNumber,
+        });
+        // Fetch updated user details
+        final updatedUserData = await usersCollection.doc(user.uid).get();
+        return MyUser.fromEntity(
+            MyUserEntity.fromDocument(updatedUserData.data()!));
+      } else {
+        throw Exception('User data not found');
+      }
+    } catch (e) {
+      log('Error updating user details: $e');
+      throw e;
+    }
+  }
 }

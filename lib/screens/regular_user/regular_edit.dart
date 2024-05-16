@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:springcrate/blocs/authentication_bloc/authentication_bloc.dart';
 
 class RegularEditScreen extends StatelessWidget {
-  const RegularEditScreen({super.key});
+  const RegularEditScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class RegularEditScreen extends StatelessWidget {
       create: (context) => AuthenticationBloc(
         userRepository: context.read<AuthenticationBloc>().userRepository,
       ),
-      child: const _RegularEditScreen(),
+      child: _RegularEditScreen(),
     );
   }
 }
@@ -52,12 +52,71 @@ class _RegularEditScreen extends StatelessWidget {
                   itemBuilder: (context, index) =>
                       employeeDetailItems[0][index],
                 ),
+                ElevatedButton(
+                  onPressed: () => _showEditProfileDialog(context),
+                  child: Text('Edit Profile'),
+                ),
               ],
             ),
           );
         } else {
           return const Text('Loading...');
         }
+      },
+    );
+  }
+
+  void _showEditProfileDialog(BuildContext context) {
+    final TextEditingController nameController = TextEditingController(
+        text: context.read<AuthenticationBloc>().state.name);
+    final TextEditingController addressController = TextEditingController(
+        text: context.read<AuthenticationBloc>().state.address);
+    final TextEditingController contactNumberController = TextEditingController(
+        text: context.read<AuthenticationBloc>().state.contactNumber);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Profile'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+              ),
+              TextFormField(
+                controller: addressController,
+                decoration: InputDecoration(labelText: 'Address'),
+              ),
+              TextFormField(
+                controller: contactNumberController,
+                decoration: InputDecoration(labelText: 'Contact Number'),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final String newName = nameController.text;
+                final String newAddress = addressController.text;
+                final String newContactNumber = contactNumberController.text;
+                context.read<AuthenticationBloc>().add(
+                      UpdateProfile(newName, newAddress, newContactNumber),
+                    );
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
       },
     );
   }
