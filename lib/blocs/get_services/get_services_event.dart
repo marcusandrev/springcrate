@@ -7,4 +7,13 @@ sealed class GetServicesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetServices extends GetServicesEvent{}
+class GetServices extends GetServicesEvent {}
+
+class SearchServices extends GetServicesEvent {
+  final String query;
+
+  const SearchServices(this.query);
+
+  @override
+  List<Object> get props => [query];
+}

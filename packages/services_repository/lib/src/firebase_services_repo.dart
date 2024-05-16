@@ -20,6 +20,24 @@ class FirebaseServiceRepo implements ServiceRepo {
   }
 
   @override
+  Future<List<Services>> getQueriedServices(String search) async {
+    final servicesCollection = FirebaseFirestore.instance
+        .collection('services')
+        .where('vehicleType', isGreaterThanOrEqualTo: search)
+        .where('vehicleType', isLessThan: '${search}z');
+
+    try {
+      return await servicesCollection.get().then((value) => value.docs
+          .map(
+              (e) => Services.fromEntity(ServicesEntity.fromDocument(e.data())))
+          .toList());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
   Future<void> createServices(Services services) async {
     try {
       return await servicesCollection

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
 import 'package:springcrate/blocs/get_transactions/get_transactions_bloc.dart';
 
 class Searchbar extends StatelessWidget {
@@ -7,10 +8,12 @@ class Searchbar extends StatelessWidget {
       {super.key,
       required this.borderColor,
       required this.iconColor,
+      required this.searchContext,
       required this.context});
 
   final Color borderColor;
   final Color iconColor;
+  final String searchContext;
   final BuildContext context;
 
   @override
@@ -27,7 +30,7 @@ class Searchbar extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Icon(Icons.search, color: iconColor),
           ),
-          _SearchBar()
+          _SearchBar(searchContext: searchContext)
         ],
       ),
     );
@@ -35,6 +38,9 @@ class Searchbar extends StatelessWidget {
 }
 
 class _SearchBar extends StatefulWidget {
+  final String searchContext;
+
+  const _SearchBar({required this.searchContext});
   @override
   _SearchBarState createState() => _SearchBarState();
 }
@@ -58,7 +64,12 @@ class _SearchBarState extends State<_SearchBar> {
           hintText: 'Search',
         ),
         onSubmitted: (query) {
-          context.read<GetTransactionsBloc>().add(SearchTransactions(query));
+          if (widget.searchContext == 'Transactions') {
+            context.read<GetTransactionsBloc>().add(SearchTransactions(query));
+          }
+          if (widget.searchContext == 'Services') {
+            context.read<GetServicesBloc>().add(SearchServices(query));
+          }
         },
       ),
     );

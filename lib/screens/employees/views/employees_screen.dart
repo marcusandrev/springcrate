@@ -29,6 +29,7 @@ class _EmployeesScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
           Searchbar(
+            searchContext: "Employee",
             borderColor: Theme.of(context).colorScheme.primary,
             iconColor: Theme.of(context).colorScheme.primary,
             context: context,

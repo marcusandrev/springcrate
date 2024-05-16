@@ -33,6 +33,7 @@ class _TransactionsScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
           Searchbar(
+            searchContext: "Transactions",
             borderColor: Theme.of(context).colorScheme.primary,
             iconColor: Theme.of(context).colorScheme.primary,
             context: context,
