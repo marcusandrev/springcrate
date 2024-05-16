@@ -170,6 +170,13 @@ class _TransactionDetailsScreenState extends State<_TransactionDetailsScreen> {
                   },
                   child: Text('Update Transaction'),
                 ),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () => _showEditServiceDialog(context),
+                  child: const Text('Edit Transaction'),
+                ),
+              ),
             ],
           ),
         ),
@@ -193,6 +200,145 @@ class _TransactionDetailsScreenState extends State<_TransactionDetailsScreen> {
           style: TextStyle(color: Colors.grey[800], fontSize: 14),
         )
       ],
+    );
+  }
+
+  void _showEditServiceDialog(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+    final transaction = widget.transaction;
+    final TextEditingController _plateNumberController =
+        TextEditingController(text: transaction.plateNumber);
+    final TextEditingController _serviceTypeController =
+        TextEditingController(text: transaction.serviceName);
+    final TextEditingController _transactionCostController =
+        TextEditingController(text: transaction.cost.toString());
+    String _selectedVehicleType = transaction.vehicleType;
+    String _selectedVehicleSize = transaction.vehicleSize;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Service'),
+          content: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: _plateNumberController,
+                    decoration:
+                        const InputDecoration(labelText: 'Plate Number'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the plate number';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _serviceTypeController,
+                    decoration:
+                        const InputDecoration(labelText: 'Service Type'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the service type';
+                      }
+                      return null;
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: _selectedVehicleType,
+                    decoration:
+                        const InputDecoration(labelText: 'Vehicle Type'),
+                    items: ['sedan', 'suv', 'van', 'pickup', 'motorcycle']
+                        .map((type) => DropdownMenuItem(
+                              value: type,
+                              child: Text(type),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        _selectedVehicleType = value;
+                      }
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a vehicle type';
+                      }
+                      return null;
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: _selectedVehicleSize,
+                    decoration:
+                        const InputDecoration(labelText: 'Vehicle Size'),
+                    items: ['small', 'medium', 'large']
+                        .map((size) => DropdownMenuItem(
+                              value: size,
+                              child: Text(size),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        _selectedVehicleSize = value;
+                      }
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a vehicle size';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _transactionCostController,
+                    decoration:
+                        const InputDecoration(labelText: 'Service Cost'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a service cost';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Please enter a valid number';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  final newTransaction = transaction.copyWith(
+                    plateNumber: _plateNumberController.text,
+                    serviceName: _serviceTypeController.text,
+                    vehicleType: _selectedVehicleType,
+                    vehicleSize: _selectedVehicleSize,
+                    cost: int.parse(_transactionCostController.text),
+                  );
+                  context
+                      .read<CreateTransactionsBloc>()
+                      .add(UpdateTransaction(newTransaction));
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

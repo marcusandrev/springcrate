@@ -12,3 +12,7 @@ final class CreateServicesInitial extends CreateServicesState {}
 final class CreateServicesFailure extends CreateServicesState {}
 final class CreateServicesLoading extends CreateServicesState {}
 final class CreateServicesSuccess extends CreateServicesState {}
+
+final class UpdateServiceLoading extends CreateServicesState {}
+final class UpdateServiceFailure extends CreateServicesState {}
+final class UpdateServiceSuccess extends CreateServicesState{}

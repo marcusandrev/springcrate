@@ -68,7 +68,7 @@ class _ServiceScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute<void>(
                       builder: (BuildContext context) => ServiceDetailsScreen(
-                        service: service,
+                        services: service,
                       ),
                     ),
                   );

@@ -27,6 +27,24 @@ class Services {
     cost: 0,
   );
 
+  Services copyWith({
+    String? serviceId,
+    String? serviceName,
+    String? promo,
+    String? vehicleType,
+    String? vehicleSize,
+    int? cost,
+  }) {
+    return Services(
+      serviceId: serviceId ?? this.serviceId,
+      serviceName: serviceName ?? this.serviceName,
+      promo: promo ?? this.promo,
+      vehicleType: vehicleType ?? this.vehicleType,
+      vehicleSize: vehicleSize ?? this.vehicleSize,
+      cost: cost ?? this.cost,
+    );
+  }
+
   ServicesEntity toEntity() {
     return ServicesEntity(
       serviceId: serviceId,

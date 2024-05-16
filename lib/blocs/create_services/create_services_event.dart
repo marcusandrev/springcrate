@@ -15,3 +15,12 @@ class CreateServices extends CreateServicesEvent {
   @override
   List<Object> get props => [services];
 }
+
+class UpdateService extends CreateServicesEvent {
+  final Services services;
+
+  const UpdateService(this.services);
+
+  @override
+  List<Object> get props => [services];
+}

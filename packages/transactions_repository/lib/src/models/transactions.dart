@@ -45,6 +45,36 @@ class Transactions {
     name: '-',
   );
 
+  Transactions copyWith({
+    String? transactionId,
+    String? plateNumber,
+    String? startDate,
+    String? endDate,
+    String? status,
+    // String? serviceId,
+    String? serviceName,
+    String? vehicleType,
+    String? vehicleSize,
+    int? cost,
+    String? userId,
+    String? name,
+  }) {
+    return Transactions(
+      transactionId: transactionId ?? this.transactionId,
+      plateNumber: plateNumber ?? this.plateNumber,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      status: status ?? this.status,
+      // serviceId: serviceId ?? this.serviceId,
+      serviceName: serviceName ?? this.serviceName,
+      vehicleType: vehicleType ?? this.vehicleType,
+      vehicleSize: vehicleSize ?? this.vehicleSize,
+      cost: cost ?? this.cost,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+    );
+  }
+
   TransactionsEntity toEntity() {
     return TransactionsEntity(
       transactionId: transactionId,
