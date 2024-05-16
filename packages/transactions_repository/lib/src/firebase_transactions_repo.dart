@@ -61,4 +61,20 @@ class FirebaseTransactionsRepo implements TransactionsRepo {
       rethrow;
     }
   }
+
+  @override
+  Future<List<Transactions>> getTransactionsByUserId(String userId) async {
+    final transactionsCollection = FirebaseFirestore.instance
+        .collection('transactions')
+        .where('userId', isEqualTo: userId);
+    try {
+      return await transactionsCollection.get().then((value) => value.docs
+          .map((e) => Transactions.fromEntity(
+              TransactionsEntity.fromDocument(e.data())))
+          .toList());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }
