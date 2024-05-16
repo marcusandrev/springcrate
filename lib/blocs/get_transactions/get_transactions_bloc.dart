@@ -52,6 +52,35 @@ class GetTransactionsBloc
         emit(GetTransactionsFailure());
       }
     });
+
+    on<GetDailyEmployeeTransactions>((event, emit) async {
+      emit(GetTransactionsLoading());
+      try {
+        List<Transactions> transactions =
+            await _transactionsRepo.getDailyEmployeeTransactions();
+        Map<String, int> monthlySales =
+            calculateMonthlyGrossSales(transactions);
+        Map<String, int> netSalesByVehicleType =
+            calculateNetSalesByVehicleType(transactions);
+        netSalesByVehicleType.forEach((vehicleType, netSales) {
+          print("$vehicleType: Php ${netSales.toString()}");
+        });
+        emit(GetTransactionsSuccess(
+            transactions, monthlySales, netSalesByVehicleType));
+      } catch (e) {
+        emit(GetTransactionsFailure());
+      }
+    });
+
+    on<ExportDailyEmployeeTransactions>((event, emit) async {
+      emit(GetTransactionsLoading());
+      try {
+        await _transactionsRepo
+            .exportDailyEmployeeTransactions(event.transactions);
+      } catch (e) {
+        emit(GetTransactionsFailure());
+      }
+    });
   }
 
   Map<String, int> calculateMonthlyGrossSales(List<Transactions> transactions) {

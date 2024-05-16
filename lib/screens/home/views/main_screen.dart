@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:springcrate/blocs/get_transactions/get_transactions_bloc.dart';
 import 'package:springcrate/screens/home/chart.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:springcrate/screens/home/widgets/export_form.dart';
 import 'package:springcrate/util/string_utils.dart';
 import 'package:transactions_repository/transactions_repository.dart';
 
@@ -68,8 +69,16 @@ class _MainScreen extends StatelessWidget {
                       ],
                     ),
                     ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Export'),
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const Wrap(
+                                children: [ExportForm()],
+                              );
+                            });
+                      },
+                      child: const Text('Export'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             Theme.of(context).colorScheme.secondary,

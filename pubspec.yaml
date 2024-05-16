@@ -32,6 +32,9 @@ dependencies:
 
   employees_repository:
     path: packages/employees_repository
+  syncfusion_flutter_xlsio: ^25.2.4
+  path_provider: ^2.1.3
+  open_file: ^3.3.2
 
 dev_dependencies:
   flutter_test:
