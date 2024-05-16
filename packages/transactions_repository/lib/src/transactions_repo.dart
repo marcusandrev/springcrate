@@ -4,7 +4,6 @@ abstract class TransactionsRepo {
   Future<List<Transactions>> getTransactions();
   Future<List<Transactions>> getQueriedTransactions(String search);
   Future<List<Transactions>> getDailyEmployeeTransactions();
-  Future<void> exportDailyEmployeeTransactions(List<Transactions> transactions);
   Future<void> createTransactions(Transactions transactions);
   Future<void> updateTransaction(Transactions transactions);
 }
