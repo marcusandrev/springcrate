@@ -18,3 +18,6 @@ class CheckAdmin extends AuthenticationEvent {
 
   const CheckAdmin(this.user);
 }
+
+
+

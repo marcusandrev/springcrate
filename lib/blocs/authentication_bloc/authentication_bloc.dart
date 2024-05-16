@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -21,9 +20,17 @@ class AuthenticationBloc
     });
     on<AuthenticationUserChanged>((event, emit) async {
       if (event.user != null) {
+        final userDetails = await userRepository.getUserDetails(event.user!);
         final isAdmin = await userRepository.isAdmin(event.user!);
-         log('User Authenticated: ${event.user!.email}, isAdmin: $isAdmin');
-        emit(AuthenticationState.authenticated(event.user!, isAdmin));
+        emit(AuthenticationState.authenticated(
+          user: event.user!,
+          isAdmin: isAdmin,
+          address: userDetails.address,
+          contactNumber: userDetails.contactNumber,
+          name: userDetails.name,
+          rate: userDetails.rate,
+          userId: userDetails.userId,
+        ));
       } else {
         emit(const AuthenticationState.unauthenticated());
       }

@@ -16,5 +16,7 @@ abstract class UserRepository {
 
   Future<void> logOut();
 
+  Future<MyUser> getUserDetails(User user);
+
   //you can add options of forget password here
 }

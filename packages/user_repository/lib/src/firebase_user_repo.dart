@@ -86,4 +86,15 @@ class FirebaseUserRepo implements UserRepository {
       throw e;
     }
   }
+
+  @override
+  Future<MyUser> getUserDetails(User user) async {
+    try {
+      final userData = await usersCollection.doc(user.uid).get();
+      return MyUser.fromEntity(MyUserEntity.fromDocument(userData.data()!));
+    } catch (e) {
+      log('Error fetching user details: $e');
+      throw e;
+    }
+  }
 }
