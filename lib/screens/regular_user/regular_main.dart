@@ -18,6 +18,7 @@ class _RegularUserScreenState extends State<RegularUserScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const RegularHomeScreen(),
     const RegularEditScreen(),
+
   ];
 
   void _onItemTapped(int index) {

@@ -48,19 +48,6 @@ class _MyAppView extends StatelessWidget {
             bodyText2: TextStyle(fontFamily: 'Inter'),
           ),
         ),
-        // home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        //     builder: (context, state) {
-        //   if (state.status == AuthenticationStatus.authenticated) {
-        //     return BlocProvider(
-        //       create: (context) => SignInBloc(
-        //           userRepository:
-        //               context.read<AuthenticationBloc>().userRepository),
-        //       child: const HomeScreen(),
-        //     );
-        //   } else {
-        //     return const WelcomeScreen();
-        //   }
-        // })
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
           if (state.status == AuthenticationStatus.authenticated) {
