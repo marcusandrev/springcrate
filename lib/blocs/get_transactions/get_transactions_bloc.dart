@@ -31,6 +31,27 @@ class GetTransactionsBloc
         emit(GetTransactionsFailure());
       }
     });
+
+    on<SearchTransactions>((event, emit) async {
+      emit(GetTransactionsLoading());
+      try {
+        List<Transactions> transactions =
+            await _transactionsRepo.getQueriedTransactions(event.query);
+        Map<String, int> monthlySales =
+            calculateMonthlyGrossSales(transactions);
+        Map<String, int> netSalesByVehicleType =
+            calculateNetSalesByVehicleType(transactions);
+        print("Net Sales by Vehicle Type:");
+        netSalesByVehicleType.forEach((vehicleType, netSales) {
+          print("$vehicleType: Php ${netSales.toString()}");
+        });
+        emit(GetTransactionsSuccess(
+            transactions, monthlySales, netSalesByVehicleType));
+      } catch (e) {
+        print(e);
+        emit(GetTransactionsFailure());
+      }
+    });
   }
 
   Map<String, int> calculateMonthlyGrossSales(List<Transactions> transactions) {

@@ -8,3 +8,12 @@ sealed class GetTransactionsEvent extends Equatable {
 }
 
 class GetTransactions extends GetTransactionsEvent {}
+
+class SearchTransactions extends GetTransactionsEvent {
+  final String query;
+
+  const SearchTransactions(this.query);
+
+  @override
+  List<Object> get props => [query];
+}
