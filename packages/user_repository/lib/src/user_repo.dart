@@ -13,6 +13,7 @@ abstract class UserRepository {
   Future<bool> isAdmin(User user);
 
   Future<List<MyUser>> getUsers();
+  Future<List<MyUser>> getQueriedUsers(String query);
 
   Future<void> logOut();
 

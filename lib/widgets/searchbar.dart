@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:springcrate/blocs/get_my_users/get_my_users_bloc.dart';
 import 'package:springcrate/blocs/get_services/get_services_bloc.dart';
 import 'package:springcrate/blocs/get_transactions/get_transactions_bloc.dart';
 
@@ -69,6 +70,10 @@ class _SearchBarState extends State<_SearchBar> {
           }
           if (widget.searchContext == 'Services') {
             context.read<GetServicesBloc>().add(SearchServices(query));
+          }
+          if (widget.searchContext == 'Employees') {
+            print(query);
+            context.read<GetMyUsersBloc>().add(SearchEmployees(query));
           }
         },
       ),
