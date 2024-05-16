@@ -9,6 +9,17 @@ sealed class GetTransactionsEvent extends Equatable {
 
 class GetTransactions extends GetTransactionsEvent {}
 
+class GetDailyEmployeeTransactions extends GetTransactionsEvent {}
+
+class ExportDailyEmployeeTransactions extends GetTransactionsEvent {
+  final List<Transactions> transactions;
+
+  const ExportDailyEmployeeTransactions(this.transactions);
+
+  @override
+  List<Object> get props => [transactions];
+}
+
 class SearchTransactions extends GetTransactionsEvent {
   final String query;
 
