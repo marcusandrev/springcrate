@@ -33,7 +33,7 @@ class _RegularHomeScreen extends StatelessWidget {
           ],
         );
       } else {
-        return const Text('Not authenticated');
+        return const Text('Loading...');
       }
     });
   }
