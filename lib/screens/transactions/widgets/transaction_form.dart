@@ -13,20 +13,6 @@ class TransactionForm extends StatelessWidget {
     super.key,
   });
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return BlocProvider(
-  //     create: (_) => CreateTransactionsBloc(
-  //       transactionsRepo: FirebaseTransactionsRepo(),
-  //     ),
-  //     child: BlocProvider(
-  //       create: (_) =>
-  //           GetServicesBloc(FirebaseServiceRepo())..add(GetServices()),
-  //       child: _TransactionForm(),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [

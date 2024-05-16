@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import '../entities/entities.dart';
 import 'package:uuid/uuid.dart';
 
