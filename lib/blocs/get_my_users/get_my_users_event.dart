@@ -35,3 +35,4 @@ class UpdateUser extends GetMyUsersEvent {
   @override
   List<Object> get props => [user];
 }
+

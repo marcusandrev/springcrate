@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:springcrate/blocs/create_employees/create_employees_bloc.dart';
 import 'package:springcrate/blocs/get_my_users/get_my_users_bloc.dart';
 
 import 'package:springcrate/blocs/get_transactions_by_userId/get_transactions_by_user_id_bloc.dart';
@@ -32,50 +33,62 @@ class _EmployeeDetailsScreen extends StatelessWidget {
   const _EmployeeDetailsScreen({super.key, required this.myUsers});
 
   final MyUser myUsers;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Employees > ${myUsers.userId}')),
-      body: BlocBuilder<GetMyUsersBloc, GetMyUsersState>(
-        builder: (context, userState) {
-          if (userState is GetMyUsersLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (userState is GetMyUsersFailure) {
-            return const Center(child: Text('Error fetching user details'));
-          } else if (userState is GetMyUsersSuccess) {
-            final users = userState.myUsers
-                .where((user) => user.userId == myUsers.userId)
-                .toList();
-
-            if (users.isNotEmpty) {
-              final user = users.first;
-              return BlocBuilder<GetTransactionsByUserIdBloc,
-                  GetTransactionsByUserIdState>(
-                builder: (context, transactionState) {
-                  if (transactionState is GetTransactionsByUserIdInitial ||
-                      transactionState is GetTransactionsByUserIdLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (transactionState
-                      is GetTransactionsByUserIdSuccess) {
-                    final transactions = transactionState.transactions;
-                    return _buildEmployeeDetails(context, user, transactions);
-                  } else if (transactionState
-                      is GetTransactionsByUserIdFailure) {
-                    return const Center(
-                        child: Text('Error fetching transactions'));
-                  } else {
-                    return const Text('Unexpected state');
-                  }
-                },
-              );
-            } else {
-              return const Center(child: Text('User not found'));
-            }
-          } else {
-            return const Text('Unexpected state');
+      body: BlocListener<GetMyUsersBloc, GetMyUsersState>(
+        listener: (context, state) {
+          if (state is UpdateUserSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('User updated successfully')),
+            );
+          } else if (state is UpdateUserFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to update user')),
+            );
           }
         },
+        child: BlocBuilder<GetMyUsersBloc, GetMyUsersState>(
+          builder: (context, userState) {
+            if (userState is GetMyUsersLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (userState is GetMyUsersFailure) {
+              return const Center(child: Text('Error fetching user details'));
+            } else if (userState is GetMyUsersSuccess) {
+              final users = userState.myUsers
+                  .where((user) => user.userId == myUsers.userId)
+                  .toList();
+
+              if (users.isNotEmpty) {
+                final user = users.first;
+                return BlocBuilder<GetTransactionsByUserIdBloc,
+                    GetTransactionsByUserIdState>(
+                  builder: (context, transactionState) {
+                    if (transactionState is GetTransactionsByUserIdInitial ||
+                        transactionState is GetTransactionsByUserIdLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (transactionState
+                        is GetTransactionsByUserIdSuccess) {
+                      final transactions = transactionState.transactions;
+                      return _buildEmployeeDetails(context, user, transactions);
+                    } else if (transactionState
+                        is GetTransactionsByUserIdFailure) {
+                      return const Center(
+                          child: Text('Error fetching transactions'));
+                    } else {
+                      return const Text('Unexpected state');
+                    }
+                  },
+                );
+              } else {
+                return const Center(child: Text('User not found'));
+              }
+            } else {
+              return const Text('Unexpected state');
+            }
+          },
+        ),
       ),
     );
   }
@@ -251,9 +264,11 @@ class _EmployeeDetailsScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  context.read<GetMyUsersBloc>().add(
-                      UpdateUser(user.copyWith(rate: _rateController.text)));
+                if (_formKey.currentState!.validate()) {
+                  final newRate = user.copyWith(
+                    rate: _rateController.text,
+                  );
+                  context.read<GetMyUsersBloc>().add(UpdateUser(newRate));
                   Navigator.of(context).pop();
                 }
               },
