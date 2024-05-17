@@ -219,7 +219,7 @@ class _TransactionDetailsScreenState extends State<_TransactionDetailsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Edit Service'),
+          title: const Text('Edit Transaction'),
           content: SingleChildScrollView(
             child: Form(
               key: _formKey,

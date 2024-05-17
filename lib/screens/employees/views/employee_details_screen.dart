@@ -65,6 +65,7 @@ class _EmployeeDetailsScreen extends StatelessWidget {
         _buildDetailWidget(context, 'Address', myUsers.address),
       ]
     ];
+
     return SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -81,7 +82,7 @@ class _EmployeeDetailsScreen extends StatelessWidget {
                   itemBuilder: ((context, index) =>
                       employeeDetailItems[0][index]),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   'Recent Transactions',
                   style: TextStyle(
@@ -116,73 +117,64 @@ class _EmployeeDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildTransactionsList(
-    BuildContext context,
-    List<Transactions> transactions,
-  ) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: transactions.length,
-            itemBuilder: (context, index) {
-              final transaction = transactions[index];
+      BuildContext context, List<Transactions> transactions) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: transactions.length,
+      itemBuilder: (context, index) {
+        final transaction = transactions[index];
 
-              String formattedEndDate = '-';
-              if (transaction.endDate != '0000-00-00T00:00:00.000000') {
-                try {
-                  DateTime endDate = DateTime.parse(transaction.endDate);
-                  formattedEndDate =
-                      DateFormat('MM/dd/yyyy hh:mm a').format(endDate);
-                } catch (e) {
-                  print('Error parsing end date: $e');
-                }
-              }
+        String formattedEndDate = '-';
+        if (transaction.endDate != '0000-00-00T00:00:00.000000') {
+          try {
+            DateTime endDate = DateTime.parse(transaction.endDate);
+            formattedEndDate = DateFormat('MM/dd/yyyy hh:mm a').format(endDate);
+          } catch (e) {
+            print('Error parsing end date: $e');
+          }
+        }
 
-              return SingleChildScrollView(
-                  child: Card(
-                elevation: 0,
-                color: const Color(0x00000000),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Plate no: ${transaction.plateNumber}',
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text('Service: ${transaction.serviceName}'),
-                        Text('Cost: Php ${transaction.cost}'),
-                      ],
+        return Card(
+          elevation: 0,
+          color: const Color(0x00000000),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Plate no: ${transaction.plateNumber}',
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const SizedBox(height: 10),
-                        Text(formattedEndDate),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      child: const Divider(
-                        height: 4,
-                        thickness: 1,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+                  ),
+                  Text('Service: ${transaction.serviceName}'),
+                  Text('Cost: Php ${transaction.cost}'),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(height: 10),
+                  Text(formattedEndDate),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 16, bottom: 16),
+                child: const Divider(
+                  height: 4,
+                  thickness: 1,
+                  color: Colors.grey,
                 ),
-              ));
-            },
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
