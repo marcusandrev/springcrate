@@ -52,10 +52,12 @@ class _RegularEditScreen extends StatelessWidget {
                   itemBuilder: (context, index) =>
                       employeeDetailItems[0][index],
                 ),
-                ElevatedButton(
+                const SizedBox(height: 20),
+                Center(
+                    child: ElevatedButton(
                   onPressed: () => _showEditProfileDialog(context),
                   child: Text('Edit Profile'),
-                ),
+                )),
               ],
             ),
           );
