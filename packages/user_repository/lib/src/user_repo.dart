@@ -22,5 +22,10 @@ abstract class UserRepository {
   Future<MyUser> updateUserDetails(
       User user, String newName, String newAddress, String newContactNumber);
 
+  Future<List<MyUser>> getMyUsersByUserId(String userId);
+
+  Future<void> updateUser(MyUser user);
+
+
   //you can add options of forget password here
 }

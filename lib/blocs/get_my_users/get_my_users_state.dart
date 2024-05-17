@@ -21,3 +21,28 @@ final class GetMyUsersSuccess extends GetMyUsersState {
   @override
   List<Object> get props => [myUsers];
 }
+
+final class GetMyUsersByUserIdSuccess extends GetMyUsersState {
+  final List<MyUser> myUsers;
+
+  const GetMyUsersByUserIdSuccess(this.myUsers);
+
+  @override
+  List<Object> get props => [myUsers];
+}
+
+final class GetMyUsersByUserIdFailure extends GetMyUsersState {}
+
+final class GetMyUsersByUserIdLoading extends GetMyUsersState {}
+
+
+final class UpdateUserSuccess extends GetMyUsersState {
+  final List<MyUser> myUsers;
+
+  const UpdateUserSuccess(this.myUsers);
+
+  @override
+  List<Object> get props => [myUsers];
+}
+
+final class UpdateUserFailure extends GetMyUsersState {}

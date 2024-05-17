@@ -30,5 +30,30 @@ class GetMyUsersBloc extends Bloc<GetMyUsersEvent, GetMyUsersState> {
         emit(GetMyUsersFailure());
       }
     });
+
+    on<GetMyUsersByUserId>((event, emit) async {
+      emit(GetMyUsersLoading());
+      try {
+        List<MyUser> users =
+            await _userRepository.getMyUsersByUserId(event.userId);
+        emit(GetMyUsersSuccess(users));
+      } catch (e) {
+        emit(GetMyUsersFailure());
+      }
+    });
+
+    on<UpdateUser>((event, emit) async {
+      emit(GetMyUsersLoading());
+      try {
+        await _userRepository.setUserData(event.user);
+        List<MyUser> users =
+            await _userRepository.getMyUsersByUserId(event.user.userId);
+        // List<MyUser> users = await _userRepository.getUsers();
+        // users = users.where((user) => !user.isAdmin).toList();
+        emit(GetMyUsersSuccess(users));
+      } catch (e) {
+        emit(GetMyUsersFailure());
+      }
+    });
   }
 }

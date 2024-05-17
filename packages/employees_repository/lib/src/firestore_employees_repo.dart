@@ -20,15 +20,27 @@ class FirebaseEmployeesRepo implements EmployeesRepo {
     }
   }
 
-  // @override
-  // Future<void> createEmployees(Employees employees) async {
-  //   try {
-  //     return await employeesCollection
-  //         .doc(employees.userId)
-  //         .set(employees.toEntity().toDocument());
-  //   } catch (e) {
-  //     log(e.toString());
-  //     rethrow;
-  //   }
-  // }
+  @override
+  Future<void> createEmployees(Employees employees) async {
+    try {
+      return await employeesCollection
+          .doc(employees.userId)
+          .set(employees.toEntity().toDocument());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateEmployee(Employees employees) async {
+    try {
+      return await employeesCollection
+          .doc(employees.userId)
+          .update(employees.toEntity().toDocument());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

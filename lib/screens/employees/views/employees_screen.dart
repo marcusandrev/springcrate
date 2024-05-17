@@ -11,8 +11,7 @@ class EmployeesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          GetMyUsersBloc(FirebaseUserRepo())..add(GetMyUsers()),
+      create: (context) => GetMyUsersBloc(FirebaseUserRepo())..add(GetMyUsers()),
       child: const _EmployeesScreen(),
     );
   }
@@ -26,6 +25,7 @@ class _EmployeesScreen extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 20),
           Searchbar(
@@ -35,9 +35,12 @@ class _EmployeesScreen extends StatelessWidget {
             context: context,
           ),
           const SizedBox(height: 20),
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: _buildEmployeesCard(context),
+          Flexible(
+            fit: FlexFit.loose,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: _buildEmployeesCard(context),
+            ),
           ),
         ],
       ),
@@ -54,95 +57,132 @@ class _EmployeesScreen extends StatelessWidget {
           return const CircularProgressIndicator();
         } else if (state is GetMyUsersSuccess) {
           print('Number of cards created: ${state.myUsers.length}');
+          
+          // Get the names of users with empty rates
+          List<String> usersWithEmptyRates = state.myUsers
+              .where((myUsers) => myUsers.rate.isEmpty)
+              .map((myUsers) => myUsers.name)
+              .toList();
+          
+          bool hasEmptyRates = usersWithEmptyRates.isNotEmpty;
 
           return Column(
-            children: state.myUsers.map((myUsers) {
-              return InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) => EmployeeDetailsScreen(
-                        myUsers: myUsers,
-                      ),
-                    ),
-                  );
-                },
-                child: Card(
-                  elevation: 4,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (hasEmptyRates)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    color: Colors.redAccent,
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
                       children: [
-                        Text(
-                          myUsers.name,
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: primaryColor),
-                        ),
-                        const SizedBox(height: 4.0),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(right: 32),
-                              child: Column(children: [
-                                const Text(
-                                  'Contact No.',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(myUsers.contactNumber)
-                              ]),
-                            ),
-                            const SizedBox(height: 16),
-                            // Column(children: [
-                            //   const Text(
-                            //     'Rate',
-                            //     style: TextStyle(
-                            //         fontSize: 16, fontWeight: FontWeight.bold),
-                            //   ),
-                            //   Text(myUsers.rate)
-                            // ])
-                          ],
-                        ),
-                        const SizedBox(height: 4.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: secondaryColor,
-                                ),
-                                TextButton(
-                                  onPressed: null, // Add functionality here
-                                  child: Text(
-                                    'More info',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: secondaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                        const Icon(Icons.warning, color: Colors.white),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          child: Text(
+                            'Some employees have empty rates: ${usersWithEmptyRates.join(', ')}. Please update their information.',
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              );
-            }).toList(),
+              ...state.myUsers.map((myUsers) {
+                return InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => EmployeeDetailsScreen(
+                          myUsers: myUsers,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 4,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            myUsers.name,
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: primaryColor),
+                          ),
+                          const SizedBox(height: 4.0),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(right: 32),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Contact No.',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(myUsers.contactNumber)
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Rate',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(myUsers.rate.isEmpty ? '-' : myUsers.rate),
+                                ],
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 4.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: secondaryColor,
+                                  ),
+                                  TextButton(
+                                    onPressed: null, // Add functionality here
+                                    child: Text(
+                                      'More info',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: secondaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ],
           );
         } else {
           return const Center(
