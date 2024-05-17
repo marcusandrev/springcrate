@@ -14,19 +14,18 @@ class EmployeeDetailsScreen extends StatelessWidget {
 
   final MyUser myUsers;
 
-@override
-Widget build(BuildContext context) {
-  return BlocProvider(
-    create: (_) => GetTransactionsByUserIdBloc(FirebaseTransactionsRepo())
-      ..add(GetTransactionsByUserId(myUsers.userId)),
-    child: BlocProvider(
-      create: (_) => GetMyUsersBloc(FirebaseUserRepo())
-        ..add(GetMyUsersByUserId(myUsers.userId)),
-              
-      child: _EmployeeDetailsScreen(myUsers: myUsers),
-    ),
-  );
-}
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => GetTransactionsByUserIdBloc(FirebaseTransactionsRepo())
+        ..add(GetTransactionsByUserId(myUsers.userId)),
+      child: BlocProvider(
+        create: (_) => GetMyUsersBloc(FirebaseUserRepo())
+          ..add(GetMyUsersByUserId(myUsers.userId)),
+        child: _EmployeeDetailsScreen(myUsers: myUsers),
+      ),
+    );
+  }
 }
 
 class _EmployeeDetailsScreen extends StatelessWidget {
@@ -96,11 +95,6 @@ class _EmployeeDetailsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            if (user.rate.isEmpty) // Add Rate button if rate is empty
-              ElevatedButton(
-                onPressed: () => _showAddRateDialog(context, user),
-                child: const Text('Add Rate'),
-              ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -114,6 +108,13 @@ class _EmployeeDetailsScreen extends StatelessWidget {
                       employeeDetailItems[0][index]),
                 ),
                 SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () => _showAddRateDialog(context, user),
+                    child: const Text('Add Rate'),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Text(
                   'Recent Transactions',
                   style: TextStyle(
@@ -220,7 +221,8 @@ class _EmployeeDetailsScreen extends StatelessWidget {
 
   void _showAddRateDialog(BuildContext context, MyUser user) {
     final _formKey = GlobalKey<FormState>();
-    final TextEditingController _rateController = TextEditingController();
+    final TextEditingController _rateController =
+        TextEditingController(text: myUsers.rate);
 
     showDialog(
       context: context,
@@ -243,8 +245,15 @@ class _EmployeeDetailsScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
                 if (_formKey.currentState?.validate() ?? false) {
-                  context.read<GetMyUsersBloc>().add(UpdateUser(user.copyWith(rate: _rateController.text)));
+                  context.read<GetMyUsersBloc>().add(
+                      UpdateUser(user.copyWith(rate: _rateController.text)));
                   Navigator.of(context).pop();
                 }
               },
@@ -256,4 +265,3 @@ class _EmployeeDetailsScreen extends StatelessWidget {
     );
   }
 }
-
