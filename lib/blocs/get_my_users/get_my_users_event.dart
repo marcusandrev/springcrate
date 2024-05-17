@@ -17,3 +17,21 @@ class SearchEmployees extends GetMyUsersEvent {
   @override
   List<Object> get props => [query];
 }
+
+class GetMyUsersByUserId extends GetMyUsersEvent {
+  final String userId;
+
+  const GetMyUsersByUserId(this.userId);
+
+  @override
+  List<Object> get props => [userId];
+}
+
+class UpdateUser extends GetMyUsersEvent {
+  final MyUser user;
+
+  const UpdateUser(this.user);
+
+  @override
+  List<Object> get props => [user];
+}

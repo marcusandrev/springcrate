@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:springcrate/blocs/get_my_users/get_my_users_bloc.dart';
 
 import 'package:springcrate/blocs/get_transactions_by_userId/get_transactions_by_user_id_bloc.dart';
 import 'package:transactions_repository/transactions_repository.dart';
@@ -11,14 +14,19 @@ class EmployeeDetailsScreen extends StatelessWidget {
 
   final MyUser myUsers;
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) =>
-            GetTransactionsByUserIdBloc(FirebaseTransactionsRepo())
-              ..add(GetTransactionsByUserId(myUsers.userId)),
-        child: _EmployeeDetailsScreen(myUsers: myUsers));
-  }
+@override
+Widget build(BuildContext context) {
+  return BlocProvider(
+    create: (_) => GetTransactionsByUserIdBloc(FirebaseTransactionsRepo())
+      ..add(GetTransactionsByUserId(myUsers.userId)),
+    child: BlocProvider(
+      create: (_) => GetMyUsersBloc(FirebaseUserRepo())
+        ..add(GetMyUsersByUserId(myUsers.userId)),
+              
+      child: _EmployeeDetailsScreen(myUsers: myUsers),
+    ),
+  );
+}
 }
 
 class _EmployeeDetailsScreen extends StatelessWidget {
@@ -28,47 +36,71 @@ class _EmployeeDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) =>
-            GetTransactionsByUserIdBloc(FirebaseTransactionsRepo())
-              ..add(GetTransactionsByUserId(myUsers.userId)),
-        child: Scaffold(
-          appBar: AppBar(title: Text('Employees > ${myUsers.userId}')),
-          body: BlocBuilder<GetTransactionsByUserIdBloc,
-              GetTransactionsByUserIdState>(
-            bloc: BlocProvider.of<GetTransactionsByUserIdBloc>(context),
-            builder: (context, state) {
-              if (state is GetTransactionsByUserIdInitial) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is GetTransactionsByUserIdLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is GetTransactionsByUserIdSuccess) {
-                final transactions = state.transactions;
-                return _buildEmployeeDetails(context, transactions);
-              } else if (state is GetTransactionsByUserIdFailure) {
-                return const Center(child: Text('Error fetching transactions'));
-              } else {
-                return const Text('Unexpected state');
-              }
-            },
-          ),
-        ));
+    return Scaffold(
+      appBar: AppBar(title: Text('Employees > ${myUsers.userId}')),
+      body: BlocBuilder<GetMyUsersBloc, GetMyUsersState>(
+        builder: (context, userState) {
+          if (userState is GetMyUsersLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (userState is GetMyUsersFailure) {
+            return const Center(child: Text('Error fetching user details'));
+          } else if (userState is GetMyUsersSuccess) {
+            final users = userState.myUsers
+                .where((user) => user.userId == myUsers.userId)
+                .toList();
+
+            if (users.isNotEmpty) {
+              final user = users.first;
+              return BlocBuilder<GetTransactionsByUserIdBloc,
+                  GetTransactionsByUserIdState>(
+                builder: (context, transactionState) {
+                  if (transactionState is GetTransactionsByUserIdInitial ||
+                      transactionState is GetTransactionsByUserIdLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (transactionState
+                      is GetTransactionsByUserIdSuccess) {
+                    final transactions = transactionState.transactions;
+                    return _buildEmployeeDetails(context, user, transactions);
+                  } else if (transactionState
+                      is GetTransactionsByUserIdFailure) {
+                    return const Center(
+                        child: Text('Error fetching transactions'));
+                  } else {
+                    return const Text('Unexpected state');
+                  }
+                },
+              );
+            } else {
+              return const Center(child: Text('User not found'));
+            }
+          } else {
+            return const Text('Unexpected state');
+          }
+        },
+      ),
+    );
   }
 
   Widget _buildEmployeeDetails(
-      BuildContext context, List<Transactions> transactions) {
+      BuildContext context, MyUser user, List<Transactions> transactions) {
     final employeeDetailItems = [
       [
-        _buildDetailWidget(context, 'Employee Name', myUsers.name),
-        _buildDetailWidget(context, 'Employee Rate', myUsers.rate),
-        _buildDetailWidget(context, 'Contact Number', myUsers.contactNumber),
-        _buildDetailWidget(context, 'Address', myUsers.address),
+        _buildDetailWidget(context, 'Employee Name', user.name),
+        _buildDetailWidget(context, 'Employee Rate', user.rate),
+        _buildDetailWidget(context, 'Contact Number', user.contactNumber),
+        _buildDetailWidget(context, 'Address', user.address),
       ]
     ];
+
     return SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            if (user.rate.isEmpty) // Add Rate button if rate is empty
+              ElevatedButton(
+                onPressed: () => _showAddRateDialog(context, user),
+                child: const Text('Add Rate'),
+              ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -185,4 +217,43 @@ class _EmployeeDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _showAddRateDialog(BuildContext context, MyUser user) {
+    final _formKey = GlobalKey<FormState>();
+    final TextEditingController _rateController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add Rate'),
+          content: Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: _rateController,
+              decoration: const InputDecoration(labelText: 'Rate'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a rate';
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState?.validate() ?? false) {
+                  context.read<GetMyUsersBloc>().add(UpdateUser(user.copyWith(rate: _rateController.text)));
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
